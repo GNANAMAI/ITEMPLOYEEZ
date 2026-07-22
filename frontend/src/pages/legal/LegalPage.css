@@ -1,0 +1,12 @@
+.legal-content {
+  max-width: 800px;
+}
+
+.legal-body p {
+  color: var(--color-text-muted);
+  line-height: 1.8;
+}
+
+.legal-body p strong {
+  color: var(--color-text);
+}

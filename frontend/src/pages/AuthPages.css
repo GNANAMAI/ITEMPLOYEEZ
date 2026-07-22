@@ -1,0 +1,153 @@
+.auth-page {
+  min-height: calc(100vh - var(--header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--color-muted);
+}
+
+.auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: min(100%, 900px);
+  align-items: center;
+}
+
+.auth-form-card {
+  padding: 2rem;
+}
+
+.auth-form-card h1 {
+  margin-bottom: 1.5rem;
+}
+
+.auth-narrow {
+  max-width: 440px;
+  width: 100%;
+}
+
+.auth-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.auth-submit {
+  width: 100%;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.auth-error {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.auth-success {
+  color: var(--color-success);
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.auth-divider {
+  text-align: center;
+  margin: 1.5rem 0 1rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 40%;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.auth-divider::before {
+  left: 0;
+}
+
+.auth-divider::after {
+  right: 0;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  background: #fff;
+  transition: background 0.2s;
+}
+
+.google-btn:hover {
+  background: var(--color-muted);
+  color: var(--color-text);
+}
+
+.auth-benefits {
+  padding: 2rem;
+}
+
+.auth-benefits h2 {
+  margin-bottom: 1rem;
+}
+
+.auth-benefits ul {
+  list-style: none;
+  padding: 0;
+}
+
+.auth-benefits li {
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  color: var(--color-text-muted);
+}
+
+.auth-benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .auth-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-benefits {
+    order: -1;
+    padding: 1rem;
+  }
+}

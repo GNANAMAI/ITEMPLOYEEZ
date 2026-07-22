@@ -1,0 +1,40 @@
+.services-section-live {
+  background:
+    radial-gradient(ellipse 70% 60% at 10% 20%, rgba(20, 160, 119, 0.08), transparent),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(11, 61, 145, 0.06), transparent),
+    #f4f7fa;
+  padding: 2.5rem 0 4rem;
+}
+
+.services-live-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 1.75rem;
+}
+
+.service-skeleton {
+  width: 100%;
+  max-width: 380px;
+  height: 360px;
+  border-radius: 18px;
+}
+
+.services-empty {
+  color: var(--color-text-muted);
+  padding: 2rem 0;
+}
+
+@media (max-width: 640px) {
+  .services-section-live {
+    padding: 1.75rem 0 2.75rem;
+  }
+
+  .services-live-grid {
+    flex-direction: column;
+  }
+
+  .service-skeleton {
+    max-width: none;
+  }
+}

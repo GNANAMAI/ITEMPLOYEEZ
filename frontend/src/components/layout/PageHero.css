@@ -1,0 +1,17 @@
+.page-hero {
+  padding: 2.5rem 0 2rem;
+  background: linear-gradient(180deg, var(--color-muted) 0%, var(--color-surface) 100%);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-hero h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.page-hero-subtitle {
+  color: var(--color-text-muted);
+  max-width: 720px;
+  font-size: 1.05rem;
+}

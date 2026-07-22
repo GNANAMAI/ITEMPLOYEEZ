@@ -1,0 +1,96 @@
+.pricing-card {
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.pricing-toggle {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.35rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-pill);
+  margin-bottom: 1.5rem;
+}
+
+.pricing-toggle button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.pricing-toggle button.active {
+  background: #fff;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.save-badge {
+  font-size: 0.7rem;
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+  margin-left: 0.25rem;
+}
+
+.pricing-header h3 {
+  font-size: 1.5rem;
+}
+
+.pricing-note {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.pricing-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  color: var(--color-text);
+}
+
+.pricing-features svg {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.pricing-cta {
+  width: 100%;
+}
+
+.pricing-refund {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-top: 1rem;
+}
+
+.pricing-login-hint,
+.pricing-message,
+.pricing-active {
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+}
+
+.pricing-active {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.pricing-message {
+  color: var(--color-primary);
+}

@@ -1,0 +1,109 @@
+.community-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #0a5499 50%, var(--color-accent) 100%);
+  padding: 4rem 0;
+  color: #fff;
+}
+
+.community-banner h1 {
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.community-banner p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+}
+
+.community-content {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.gate-card {
+  text-align: center;
+  padding: 2.5rem;
+}
+
+.gate-icon {
+  color: var(--color-accent);
+  margin-bottom: 1rem;
+}
+
+.gate-preview {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.gate-preview-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.gate-preview-item.blurred {
+  opacity: 0.6;
+  filter: blur(0.5px);
+}
+
+.gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.community-subscribe {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.community-hub {
+  padding: 2rem;
+}
+
+.community-status {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.hub-item {
+  padding: 1.25rem;
+  background: var(--color-muted);
+  border-radius: var(--radius-md);
+}
+
+.hub-item svg {
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}
+
+.hub-item h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.hub-item p {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.manage-link {
+  font-size: 0.875rem;
+}
