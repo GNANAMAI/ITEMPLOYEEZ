@@ -21,8 +21,12 @@
 
 .breadcrumb a {
   color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.15s;
 }
 
 .breadcrumb a:hover {
   color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

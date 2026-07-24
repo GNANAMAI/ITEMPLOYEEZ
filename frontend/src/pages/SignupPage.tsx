@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { CheckCircle2, Layers, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -32,6 +32,17 @@ export function SignupPage() {
   const [error, setError] = useState("");
   const { register } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const returnTo = (() => {
+    const raw = searchParams.get("returnTo");
+    if (!raw) return "/it-apps";
+    try {
+      const decoded = decodeURIComponent(raw);
+      return decoded.startsWith("/") ? decoded : "/it-apps";
+    } catch {
+      return "/it-apps";
+    }
+  })();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -43,7 +54,7 @@ export function SignupPage() {
     setError("");
     try {
       await register(form);
-      navigate("/community-subscribe");
+      navigate(returnTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -140,7 +151,8 @@ export function SignupPage() {
           </form>
 
           <p className="signup-switch">
-            Already have an account? <Link to="/login">Log in</Link>
+            Already have an account?{" "}
+            <Link to={`/login?returnTo=${encodeURIComponent(returnTo)}`}>Log in</Link>
           </p>
         </div>
 

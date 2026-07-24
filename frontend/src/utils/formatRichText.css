@@ -1,0 +1,51 @@
+.rich-text-paragraph {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+
+.rich-text-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text-heading,
+.rich-text-label {
+  margin: 1.25rem 0 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.rich-text-labeled:first-child .rich-text-label {
+  margin-top: 0;
+}
+
+.rich-text-list {
+  margin: 0 0 1rem;
+  padding-left: 1.35rem;
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+.rich-text-list li {
+  margin-bottom: 0.35rem;
+}
+
+.rich-text-list li:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text-block .rich-text-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.legal-body .rich-text-paragraph,
+.legal-body .rich-text-list {
+  color: var(--color-text-muted);
+}
+
+.legal-body .rich-text-heading,
+.legal-body .rich-text-label {
+  color: var(--color-primary);
+}

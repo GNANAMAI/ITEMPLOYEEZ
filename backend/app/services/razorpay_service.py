@@ -6,8 +6,9 @@ import razorpay
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
-from app.models.subscription import Subscription
+from app.models.product import ProductDetail
 from app.models.user import User
+from app.services.membership_service import activate_membership, get_or_create_membership
 
 settings = get_settings()
 
@@ -18,66 +19,59 @@ def get_razorpay_client() -> razorpay.Client | None:
     return razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
 
 
-def resolve_plan_id(plan_type: str) -> str:
-    if plan_type == "yearly":
-        return settings.razorpay_plan_yearly
-    return settings.razorpay_plan_monthly
+def resolve_plan_id(product: ProductDetail, plan_type: str) -> str:
+    if product.razorpay_plan_id:
+        return product.razorpay_plan_id
+    if plan_type == "monthly":
+        return settings.razorpay_plan_monthly
+    return settings.razorpay_plan_yearly
 
 
-def get_or_create_subscription(db: Session, user: User) -> Subscription:
-    subscription = db.query(Subscription).filter(Subscription.user_id == user.id).first()
-    if subscription:
-        return subscription
-
-    subscription = Subscription(user_id=user.id, plan_id=settings.razorpay_plan_monthly, status="inactive")
-    db.add(subscription)
-    db.commit()
-    db.refresh(subscription)
-    return subscription
-
-
-def subscription_is_active(subscription: Subscription | None) -> bool:
-    if not subscription:
-        return False
-    if subscription.status not in {"active", "authenticated"}:
-        return False
-    if subscription.current_period_end and subscription.current_period_end < datetime.utcnow():
-        return False
-    return True
-
-
-def create_checkout(db: Session, user: User, plan_type: str) -> dict:
-    plan_id = resolve_plan_id(plan_type)
-    subscription = get_or_create_subscription(db, user)
-    subscription.plan_id = plan_id
-    db.commit()
+def create_product_checkout(
+    db: Session, user: User, product: ProductDetail, plan_type: str = "yearly"
+) -> dict:
+    plan_id = resolve_plan_id(product, plan_type)
+    membership = get_or_create_membership(db, user, product)
 
     client = get_razorpay_client()
     if client is None:
-        # Mock mode when Razorpay keys are not configured (local development).
-        subscription.status = "active"
-        subscription.current_period_end = datetime.utcnow() + timedelta(days=30 if plan_type == "monthly" else 365)
-        subscription.razorpay_subscription_id = f"mock_sub_{user.id}"
-        db.commit()
+        activate_membership(
+            db,
+            membership,
+            razorpay_subscription_id=f"mock_sub_{user.id}_{product.id}",
+            status="active",
+            period_days=365 if plan_type == "yearly" else 30,
+        )
         return {
-            "subscription_id": subscription.razorpay_subscription_id,
+            "subscription_id": membership.razorpay_subscription_id,
             "key_id": "mock_key",
             "plan_id": plan_id,
             "customer_notify": 1,
-            "notes": {"user_id": str(user.id)},
+            "notes": {
+                "user_id": str(user.id),
+                "product_slug": product.slug,
+                "email": user.email,
+            },
             "mock_mode": True,
+            "product_slug": product.slug,
+            "product_title": product.title,
+            "amount_paise": product.price_paise,
         }
 
     payload = {
         "plan_id": plan_id,
         "total_count": 12 if plan_type == "monthly" else 1,
         "customer_notify": 1,
-        "notes": {"user_id": str(user.id), "email": user.email},
+        "notes": {
+            "user_id": str(user.id),
+            "product_slug": product.slug,
+            "email": user.email,
+        },
     }
     razorpay_subscription = client.subscription.create(payload)
 
-    subscription.razorpay_subscription_id = razorpay_subscription["id"]
-    subscription.status = razorpay_subscription.get("status", "created")
+    membership.razorpay_subscription_id = razorpay_subscription["id"]
+    membership.status = razorpay_subscription.get("status", "created")
     db.commit()
 
     return {
@@ -85,22 +79,13 @@ def create_checkout(db: Session, user: User, plan_type: str) -> dict:
         "key_id": settings.razorpay_key_id,
         "plan_id": plan_id,
         "customer_notify": 1,
-        "notes": {"user_id": str(user.id)},
+        "notes": {
+            "user_id": str(user.id),
+            "product_slug": product.slug,
+            "email": user.email,
+        },
         "mock_mode": False,
+        "product_slug": product.slug,
+        "product_title": product.title,
+        "amount_paise": product.price_paise,
     }
-
-
-def activate_subscription_from_webhook(db: Session, razorpay_subscription_id: str, status: str) -> None:
-    subscription = (
-        db.query(Subscription)
-        .filter(Subscription.razorpay_subscription_id == razorpay_subscription_id)
-        .first()
-    )
-    if not subscription:
-        return
-
-    subscription.status = status
-    if status in {"active", "authenticated"}:
-        days = 365 if "yearly" in subscription.plan_id else 30
-        subscription.current_period_end = datetime.utcnow() + timedelta(days=days)
-    db.commit()

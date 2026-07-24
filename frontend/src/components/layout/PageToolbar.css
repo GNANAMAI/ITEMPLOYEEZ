@@ -1,0 +1,80 @@
+.page-toolbar {
+  background: var(--color-primary);
+  padding: 0.85rem 0;
+}
+
+.page-toolbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.page-toolbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.toolbar-crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.toolbar-crumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.toolbar-crumb-link {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.15s, text-decoration 0.15s;
+}
+
+.toolbar-crumb-link:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.toolbar-crumb-current {
+  color: #fda4af;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.toolbar-crumb-sep {
+  color: rgba(255, 255, 255, 0.55);
+  user-select: none;
+}
+
+.page-toolbar-extra {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .page-toolbar-inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .page-toolbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-toolbar-extra {
+    width: 100%;
+  }
+}

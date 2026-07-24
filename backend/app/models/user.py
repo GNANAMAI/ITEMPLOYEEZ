@@ -23,6 +23,13 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     subscription = relationship("Subscription", back_populates="user", uselist=False)
+    memberships = relationship("CommunityMembership", back_populates="user")
+    community_posts = relationship(
+        "CommunityPost",
+        back_populates="user",
+        foreign_keys="CommunityPost.user_id",
+    )
+    community_comments = relationship("CommunityComment", back_populates="user")
 
 
 class PasswordResetToken(Base):

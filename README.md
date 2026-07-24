@@ -113,10 +113,22 @@ See [`frontend/.env.example`](frontend/.env.example):
 | `/terms-conditions`, `/privacy-policy`, `/cancel-policies`, `/disclaimer` | Legal |
 | `/sub-admin/login`, `/sub-admin/dashboard` | Sub-admin portal |
 
+## User Workflow
+
+1. **Login / Sign up** → redirected to IT Products
+2. **Browse companies** at `/it-apps`
+3. **Select a company** → `/product/{id}` shows products under that company
+4. **Product details** → `/product-details/{slug}` with description and Subscribe CTA
+5. **Checkout** → `/subscription-checkout/{slug}` (₹99/year, Razorpay)
+6. **Community access** → `/community-subscribe?product={slug}` after payment
+
+Without Razorpay keys, checkout runs in **mock mode** (instant activation for testing).
+
 ## Razorpay Notes
 
-- Without Razorpay keys, subscription runs in **mock mode** (activates membership locally for testing).
-- With keys, add Razorpay plan IDs to `.env` and set webhook to `POST /api/subscriptions/webhooks/razorpay`.
+- **Without Razorpay keys:** checkout shows a **demo Razorpay modal** (Test Mode) so you can walk through the payment UI locally.
+- **With keys:** add test/live keys to `backend/.env` and `frontend/.env`, create a ₹99/year plan in the Razorpay dashboard, and set `RAZORPAY_PLAN_YEARLY` + `VITE_RAZORPAY_KEY_ID`.
+- Webhook URL: `POST /api/subscriptions/webhooks/razorpay`
 
 ## Production Build
 

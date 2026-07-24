@@ -6,7 +6,8 @@ from pydantic import BaseModel
 
 
 class SubscriptionCreate(BaseModel):
-    plan_type: str  # "monthly" or "yearly"
+    product_slug: str
+    plan_type: str = "yearly"
 
 
 class SubscriptionResponse(BaseModel):
@@ -24,3 +25,6 @@ class RazorpayCheckoutResponse(BaseModel):
     customer_notify: int = 1
     notes: dict | None = None
     mock_mode: bool = False
+    product_slug: str | None = None
+    product_title: str | None = None
+    amount_paise: int | None = None

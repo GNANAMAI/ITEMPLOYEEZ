@@ -4,7 +4,9 @@ import { LegalTabs } from "@/components/ui/LegalTabs";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { api } from "@/services/api";
+import { renderRichText } from "@/utils/formatRichText";
 import "./LegalPage.css";
+import "@/utils/formatRichText.css";
 
 interface LegalPageViewProps {
   slug: string;
@@ -41,11 +43,7 @@ export function LegalPageView({ slug, breadcrumbLabel }: LegalPageViewProps) {
             ) : (
               <>
                 <h2>{title}</h2>
-                <div className="legal-body">
-                  {content.split("\n\n").map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
-                </div>
+                <div className="legal-body">{renderRichText(content)}</div>
               </>
             )}
           </Card>

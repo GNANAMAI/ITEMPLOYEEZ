@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import "./TopNav.css";
 
@@ -12,6 +12,7 @@ const NAV_LINKS = [
 
 export function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
@@ -60,12 +61,30 @@ export function TopNav() {
 
         <div className="nav-actions">
           {isAuthenticated ? (
-            <>
-              <span className="nav-user">Hi, {user?.name.split(" ")[0]}</span>
-              <button type="button" className="nav-text-btn" onClick={logout}>
-                Logout
+            <div className="nav-user-menu">
+              <button
+                type="button"
+                className="nav-welcome-btn"
+                onClick={() => setUserMenuOpen((prev) => !prev)}
+                aria-expanded={userMenuOpen}
+              >
+                Welcome, {user?.name}
+                <ChevronDown size={16} />
               </button>
-            </>
+              {userMenuOpen ? (
+                <div className="nav-user-dropdown">
+                  <Link to="/community-subscribe" onClick={() => setUserMenuOpen(false)}>
+                    My Communities
+                  </Link>
+                  <Link to="/it-apps" onClick={() => setUserMenuOpen(false)}>
+                    IT Products
+                  </Link>
+                  <button type="button" onClick={logout}>
+                    Logout
+                  </button>
+                </div>
+              ) : null}
+            </div>
           ) : (
             <>
               <Link to="/login" className="nav-text-btn">

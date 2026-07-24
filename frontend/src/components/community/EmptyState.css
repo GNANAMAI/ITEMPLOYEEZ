@@ -1,0 +1,37 @@
+.ch-empty {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-md);
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ch-empty-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.85rem;
+  border-radius: 50%;
+  background: var(--color-muted);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ch-empty h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.ch-empty p {
+  margin: 0 auto;
+  max-width: 340px;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}

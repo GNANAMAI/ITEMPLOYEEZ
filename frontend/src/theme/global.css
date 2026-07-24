@@ -1,14 +1,14 @@
 :root {
-  --color-primary: #0b3d91;
-  --color-primary-dark: #082d6b;
-  --color-accent: #0d9488;
-  --color-accent-light: #14b8a6;
+  --color-primary: #0f172a;
+  --color-primary-dark: #020617;
+  --color-accent: #e11d48;
+  --color-accent-light: #f43f5e;
   --color-surface: #ffffff;
-  --color-muted: #f4f7fb;
+  --color-muted: #f1f5f9;
   --color-border: #e2e8f0;
-  --color-text: #1e293b;
+  --color-text: #0f172a;
   --color-text-muted: #64748b;
-  --color-success: #059669;
+  --color-success: #2563eb;
   --color-warning: #d97706;
   --color-danger: #dc2626;
 
@@ -20,9 +20,9 @@
   --radius-lg: 16px;
   --radius-pill: 999px;
 
-  --shadow-sm: 0 2px 8px rgba(11, 61, 145, 0.06);
-  --shadow-md: 0 4px 24px rgba(11, 61, 145, 0.08);
-  --shadow-lg: 0 12px 40px rgba(11, 61, 145, 0.12);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.12);
 
   --container-max: 1200px;
   --header-height: 72px;
@@ -50,6 +50,7 @@ body {
 a {
   color: var(--color-accent);
   text-decoration: none;
+  cursor: pointer;
 }
 
 a:hover {
@@ -117,7 +118,7 @@ ul {
 }
 
 .grid-bg {
-  background-image: radial-gradient(circle at 1px 1px, rgba(11, 61, 145, 0.07) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgba(15, 23, 42, 0.07) 1px, transparent 0);
   background-size: 24px 24px;
 }
 
@@ -159,4 +160,12 @@ ul {
   .section {
     padding: 2.5rem 0;
   }
+}
+
+.auth-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  color: var(--color-text-muted);
 }

@@ -6,7 +6,7 @@
   min-height: calc(100vh - var(--header-height));
   padding: clamp(2rem, 4vw, 3.5rem) 1.25rem 3rem;
   overflow: hidden;
-  background: linear-gradient(180deg, #f0fdf9 0%, #f8fafc 42%, #eef6ff 100%);
+  background: linear-gradient(180deg, #fff1f2 0%, #f8fafc 42%, #f1f5f9 100%);
 }
 
 .signup-bg {
@@ -27,7 +27,7 @@
   height: 420px;
   top: -120px;
   right: -80px;
-  background: rgba(20, 160, 119, 0.22);
+  background: rgba(225, 29, 72, 0.18);
 }
 
 .signup-blob-b {
@@ -35,7 +35,7 @@
   height: 360px;
   bottom: -100px;
   left: -60px;
-  background: rgba(59, 130, 246, 0.16);
+  background: rgba(15, 23, 42, 0.1);
 }
 
 .signup-blob-c {
@@ -66,9 +66,9 @@
   padding: 0.4rem 0.85rem;
   margin-bottom: 1rem;
   border-radius: 999px;
-  background: rgba(20, 160, 119, 0.12);
-  border: 1px solid rgba(20, 160, 119, 0.22);
-  color: #0f766e;
+  background: rgba(225, 29, 72, 0.1);
+  border: 1px solid rgba(225, 29, 72, 0.22);
+  color: #be123c;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -77,14 +77,14 @@
 .signup-header h1 {
   font-size: clamp(1.85rem, 3.5vw, 2.5rem);
   letter-spacing: -0.03em;
-  color: var(--color-primary, #0b2d5c);
+  color: var(--color-primary, #0f172a);
   margin: 0 0 0.65rem;
 }
 
 .signup-header p {
   margin: 0 auto;
   max-width: 34rem;
-  color: var(--color-text-muted, #5b6b7c);
+  color: var(--color-text-muted, #64748b);
   font-size: 1rem;
   line-height: 1.65;
 }
@@ -104,8 +104,8 @@
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(15, 40, 80, 0.08);
-  box-shadow: 0 2px 8px rgba(15, 40, 80, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
 .signup-step-num {
@@ -115,7 +115,7 @@
   width: 1.65rem;
   height: 1.65rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #14a077, #0d9488);
+  background: linear-gradient(135deg, #e11d48, #f43f5e);
   color: #fff;
   font-size: 0.68rem;
   font-weight: 800;
@@ -138,8 +138,8 @@
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow:
-    0 1px 2px rgba(15, 40, 80, 0.04),
-    0 16px 40px rgba(15, 40, 80, 0.08);
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 16px 40px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(10px);
 }
 
@@ -162,8 +162,8 @@
 }
 
 .signup-form-card .input-group input:focus {
-  border-color: #14a077;
-  box-shadow: 0 0 0 3px rgba(20, 160, 119, 0.12);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.12);
   background: #fff;
 }
 
@@ -179,11 +179,11 @@
 
 .signup-terms input {
   margin-top: 0.2rem;
-  accent-color: #14a077;
+  accent-color: var(--color-accent);
 }
 
 .signup-terms a {
-  color: #14a077;
+  color: var(--color-accent);
   font-weight: 600;
 }
 
@@ -198,11 +198,11 @@
   text-align: center;
   margin: 1.35rem 0 0;
   font-size: 0.9rem;
-  color: var(--color-text-muted, #5b6b7c);
+  color: var(--color-text-muted, #64748b);
 }
 
 .signup-switch a {
-  color: #14a077;
+  color: var(--color-accent);
   font-weight: 700;
 }
 
@@ -221,14 +221,14 @@
   padding: 0.55rem 0.9rem;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(15, 40, 80, 0.07);
+  border: 1px solid rgba(15, 23, 42, 0.07);
   color: #475569;
   font-size: 0.82rem;
   font-weight: 600;
 }
 
 .signup-highlight svg {
-  color: #14a077;
+  color: var(--color-accent);
   flex-shrink: 0;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .signup-footnote svg {
-  color: #14a077;
+  color: var(--color-accent);
 }
 
 @media (max-width: 640px) {

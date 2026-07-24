@@ -4,8 +4,8 @@
   color: rgba(255, 255, 255, 0.9);
   margin-top: auto;
   background:
-    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(13, 148, 136, 0.35), transparent),
-    linear-gradient(135deg, #061428 0%, #0b3d91 100%);
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(225, 29, 72, 0.28), transparent),
+    linear-gradient(135deg, #020617 0%, #0f172a 100%);
 }
 
 .site-footer::before {
@@ -59,7 +59,7 @@
 }
 
 .site-footer a:hover {
-  color: #7dd3c7;
+  color: #fda4af;
 }
 
 .footer-bottom {

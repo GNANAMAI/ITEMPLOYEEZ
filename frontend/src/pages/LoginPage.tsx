@@ -28,6 +28,17 @@ const LOGIN_PERKS = [
   },
 ];
 
+function getReturnPath(searchParams: URLSearchParams) {
+  const raw = searchParams.get("returnTo");
+  if (!raw) return "/it-apps";
+  try {
+    const decoded = decodeURIComponent(raw);
+    return decoded.startsWith("/") ? decoded : "/it-apps";
+  } catch {
+    return "/it-apps";
+  }
+}
+
 export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,19 +48,20 @@ export function LoginPage() {
   const { login, setTokens, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const returnTo = getReturnPath(searchParams);
 
   useEffect(() => {
     const accessToken = searchParams.get("access_token");
     const refreshToken = searchParams.get("refresh_token");
     if (accessToken && refreshToken) {
       setTokens(accessToken, refreshToken);
-      navigate("/", { replace: true });
+      navigate(returnTo, { replace: true });
     }
-  }, [searchParams, setTokens, navigate]);
+  }, [searchParams, setTokens, navigate, returnTo]);
 
   useEffect(() => {
-    if (isAuthenticated) navigate("/", { replace: true });
-  }, [isAuthenticated, navigate]);
+    if (isAuthenticated) navigate(returnTo, { replace: true });
+  }, [isAuthenticated, navigate, returnTo]);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -57,7 +69,7 @@ export function LoginPage() {
     setError("");
     try {
       await login(email, password, rememberMe);
-      navigate("/");
+      navigate(returnTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -142,7 +154,8 @@ export function LoginPage() {
             </form>
 
             <p className="auth-switch">
-              Not registered yet? <Link to="/signup">Sign Up</Link>
+              Not registered yet?{" "}
+              <Link to={`/signup?returnTo=${encodeURIComponent(returnTo)}`}>Sign Up</Link>
             </p>
 
             <div className="auth-divider">or continue with</div>

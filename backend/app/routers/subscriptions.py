@@ -9,10 +9,12 @@ from sqlalchemy.orm import Session
 from app.config import get_settings
 from app.database import get_db
 from app.dependencies import get_current_user
-from app.models.subscription import Subscription
+from app.models.product import ProductDetail
 from app.models.user import User
 from app.schemas.subscription import RazorpayCheckoutResponse, SubscriptionCreate, SubscriptionResponse
-from app.services.razorpay_service import create_checkout, subscription_is_active
+from app.services.membership_service import membership_is_active
+from app.models.membership import CommunityMembership
+from app.services.razorpay_service import create_product_checkout
 
 router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 settings = get_settings()
@@ -23,16 +25,21 @@ def get_subscription_status(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    subscription = db.query(Subscription).filter(Subscription.user_id == current_user.id).first()
-    if not subscription:
+    membership = (
+        db.query(CommunityMembership)
+        .filter(CommunityMembership.user_id == current_user.id)
+        .order_by(CommunityMembership.updated_at.desc())
+        .first()
+    )
+    if not membership:
         return SubscriptionResponse(id=0, plan_id="", status="inactive", current_period_end=None, is_active=False)
 
     return SubscriptionResponse(
-        id=subscription.id,
-        plan_id=subscription.plan_id,
-        status=subscription.status,
-        current_period_end=subscription.current_period_end,
-        is_active=subscription_is_active(subscription),
+        id=membership.id,
+        plan_id=membership.razorpay_subscription_id or "",
+        status=membership.status,
+        current_period_end=membership.current_period_end,
+        is_active=membership_is_active(membership),
     )
 
 
@@ -45,7 +52,11 @@ def create_subscription(
     if payload.plan_type not in {"monthly", "yearly"}:
         raise HTTPException(status_code=400, detail="plan_type must be 'monthly' or 'yearly'")
 
-    checkout = create_checkout(db, current_user, payload.plan_type)
+    product = db.query(ProductDetail).filter(ProductDetail.slug == payload.product_slug).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    checkout = create_product_checkout(db, current_user, product, payload.plan_type)
     return RazorpayCheckoutResponse(**checkout)
 
 
@@ -73,8 +84,8 @@ async def razorpay_webhook(
     status_value = entity.get("status", "active")
 
     if subscription_id and event.startswith("subscription."):
-        from app.services.razorpay_service import activate_subscription_from_webhook
+        from app.services.membership_service import activate_membership_from_webhook
 
-        activate_subscription_from_webhook(db, subscription_id, status_value)
+        activate_membership_from_webhook(db, subscription_id, status_value)
 
     return {"status": "ok"}

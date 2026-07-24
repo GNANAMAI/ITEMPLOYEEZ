@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
+import { PageToolbar } from "@/components/layout/PageToolbar";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 import { api } from "@/services/api";
 import type { ProductCategory } from "@/types";
 import "./ProductsCatalogPage.css";
+import "@/components/ui/BackLink.css";
 
 export function ProductsCatalogPage() {
   const [products, setProducts] = useState<ProductCategory[]>([]);
@@ -28,29 +30,25 @@ export function ProductsCatalogPage() {
 
   return (
     <div className="it-products-page">
-      {/* Live site: teal bar with breadcrumb + Search Company */}
-      <div className="it-products-toolbar">
-        <div className="container it-products-toolbar-inner">
-          <nav className="it-products-crumbs" aria-label="Breadcrumb">
-            <Link to="/">Home</Link>
-            <span className="crumb-sep" aria-hidden>
-              ·
-            </span>
-            <span>IT Products</span>
-          </nav>
-
-          <div className="it-products-search">
-            <Search size={18} aria-hidden />
-            <input
-              type="search"
-              placeholder="Search Company"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search Company"
-            />
-          </div>
+      <PageToolbar
+        items={[
+          { label: "Home", path: "/" },
+          { label: "IT Products" },
+        ]}
+        backFallback="/"
+        backLabel="Back"
+      >
+        <div className="it-products-search">
+          <Search size={18} aria-hidden />
+          <input
+            type="search"
+            placeholder="Search Company"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search Company"
+          />
         </div>
-      </div>
+      </PageToolbar>
 
       <section className="it-products-grid-section">
         <div className="container">

@@ -16,15 +16,21 @@ def _parse_gallery(raw: str | None) -> list[str]:
     return [item.strip() for item in raw.split(",") if item.strip()]
 
 
-def _detail_to_response(detail: ProductDetail) -> ProductDetailResponse:
+def _detail_to_response(detail: ProductDetail, category: ProductCategory | None = None) -> ProductDetailResponse:
+    cat = category or detail.category
     return ProductDetailResponse(
         id=detail.id,
         slug=detail.slug,
         title=detail.title,
+        subtitle=detail.subtitle,
         description=detail.description,
         image_url=detail.image_url,
         gallery_urls=_parse_gallery(detail.gallery_urls),
         category_id=detail.category_id,
+        price_paise=detail.price_paise or 9900,
+        billing_period=detail.billing_period or "yearly",
+        category_name=cat.name if cat else None,
+        category_image_url=cat.image_url if cat else None,
     )
 
 
@@ -55,6 +61,21 @@ def get_product_detail(slug: str, db: Session = Depends(get_db)):
     if not detail:
         raise HTTPException(status_code=404, detail="Product detail not found")
     return _detail_to_response(detail)
+
+
+@router.get("/{product_id}/details", response_model=list[ProductDetailResponse])
+def list_product_details_for_category(product_id: int, db: Session = Depends(get_db)):
+    category = db.query(ProductCategory).filter(ProductCategory.id == product_id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Product category not found")
+
+    details = (
+        db.query(ProductDetail)
+        .filter(ProductDetail.category_id == product_id)
+        .order_by(ProductDetail.title)
+        .all()
+    )
+    return [_detail_to_response(item, category) for item in details]
 
 
 @router.get("/{product_id}", response_model=ProductCategoryResponse)

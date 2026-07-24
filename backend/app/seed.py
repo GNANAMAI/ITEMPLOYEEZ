@@ -39,34 +39,82 @@ PRODUCT_DETAILS = [
     {
         "slug": "SAP ECC",
         "title": "SAP ECC (ERP Central Component)",
-        "description": "Enterprise resource planning suite discussed by IT professionals working with SAP landscapes.",
+        "subtitle": "Enterprise resource planning for SAP landscapes",
+        "description": (
+            "SAP ECC is the legacy ERP suite used by enterprises worldwide. "
+            "Join this community to discuss implementation, migration to S/4HANA, "
+            "ABAP development, and best practices.\n\n"
+            "Key topics covered:\n"
+            "- Basis administration\n"
+            "- FI/CO modules\n"
+            "- MM/SD workflows\n"
+            "- Integration patterns for IT professionals"
+        ),
         "image_url": f"{BASE_IMAGE}/1756485854.jpeg",
         "gallery_urls": f"{BASE_IMAGE}/1756085143.jfif,{BASE_IMAGE}/1756485854.jpeg",
         "category_id": 49,
+        "price_paise": 9900,
+        "billing_period": "yearly",
     },
     {
         "slug": "macOS",
         "title": "macOS",
-        "description": "Apple platform knowledge shared by developers and IT admins in the community.",
+        "subtitle": "Apple platform for developers and IT admins",
+        "description": (
+            "macOS powers creative and engineering workflows across the industry. "
+            "Connect with admins and developers sharing deployment, security, "
+            "and automation knowledge.\n\n"
+            "Key topics covered:\n"
+            "- MDM and device management\n"
+            "- Shell scripting and automation\n"
+            "- Xcode tooling for developers\n"
+            "- Enterprise support workflows\n"
+            "- Cross-platform development"
+        ),
         "image_url": f"{BASE_IMAGE}/1755758277.jpeg",
         "gallery_urls": f"{BASE_IMAGE}/1755758215.png,{BASE_IMAGE}/1755758277.jpeg",
         "category_id": 35,
+        "price_paise": 9900,
+        "billing_period": "yearly",
     },
     {
         "slug": "Adobe Photoshop Express",
         "title": "Adobe Photoshop Express",
-        "description": "Creative tools and workflows shared within the Adobe product space.",
+        "subtitle": "Photoshop – Image editing & graphic design",
+        "description": (
+            "Photoshop is the industry standard for image editing and graphic design. "
+            "This community covers workflows, creative tooling, and design best practices.\n\n"
+            "Key features covered:\n"
+            "- Image editing fundamentals\n"
+            "- Layers and masks\n"
+            "- Graphic design workflows\n"
+            "- Digital painting and drawing\n"
+            "- AI-powered tools (Adobe Sensei)"
+        ),
         "image_url": f"{BASE_IMAGE}/1756636212.webp",
         "gallery_urls": f"{BASE_IMAGE}/1756084796.png,{BASE_IMAGE}/1756636212.webp",
         "category_id": 36,
+        "price_paise": 9900,
+        "billing_period": "yearly",
     },
     {
         "slug": "Pega DevOps",
         "title": "Pega DevOps",
-        "description": "PEGA DevOps practices and knowledge for IT professionals working on Pega platforms.",
+        "subtitle": "DevOps practices for Pega platforms",
+        "description": (
+            "PEGA DevOps brings CI/CD and release management to Pega applications. "
+            "Share pipelines, testing strategies, and platform upgrades with peers.\n\n"
+            "Key topics covered:\n"
+            "- Deployment manager\n"
+            "- Branch rules and merge policies\n"
+            "- Quality gates and testing\n"
+            "- Enterprise Pega operations"
+        ),
         "image_url": f"{BASE_IMAGE}/1756635771.jpeg",
         "gallery_urls": f"{BASE_IMAGE}/1756085127.png,{BASE_IMAGE}/1756635771.jpeg",
         "category_id": 48,
+        "price_paise": 9900,
+        "billing_period": "yearly",
     },
 ]
 
@@ -181,10 +229,13 @@ def seed_database(db: Session) -> None:
         existing = db.query(ProductDetail).filter(ProductDetail.slug == item["slug"]).first()
         if existing:
             existing.title = item["title"]
+            existing.subtitle = item.get("subtitle")
             existing.description = item["description"]
             existing.image_url = item["image_url"]
             existing.gallery_urls = item["gallery_urls"]
             existing.category_id = item["category_id"]
+            existing.price_paise = item.get("price_paise", 9900)
+            existing.billing_period = item.get("billing_period", "yearly")
         else:
             db.add(ProductDetail(**item))
 

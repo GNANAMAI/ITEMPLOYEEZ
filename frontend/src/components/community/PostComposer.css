@@ -1,0 +1,86 @@
+.ch-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.ch-avatar.sm {
+  width: 48px;
+  height: 48px;
+  font-size: 0.85rem;
+}
+
+.ch-composer-bar {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.ch-composer-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+.ch-composer-prompt {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.ch-composer-trigger:hover .ch-composer-prompt {
+  background: #fff;
+  border-color: #cbd5e1;
+}
+
+.ch-composer-actions-bar {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.65rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.ch-composer-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+.ch-composer-action svg {
+  color: var(--color-accent);
+}
+
+.ch-composer-action:hover {
+  background: var(--color-muted);
+  color: var(--color-text);
+}

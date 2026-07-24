@@ -1,0 +1,55 @@
+.ch-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 1.25rem;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: #fff;
+  overflow-x: auto;
+}
+
+.ch-tab {
+  position: relative;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-width: max-content;
+  padding: 0.75rem 0.85rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.ch-tab:hover {
+  color: var(--color-text);
+}
+
+.ch-tab.active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.ch-tab em {
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-muted);
+  padding: 0.05rem 0.35rem;
+  border-radius: var(--radius-pill);
+}
+
+.ch-tab.active em {
+  color: var(--color-accent);
+  background: rgba(225, 29, 72, 0.1);
+}

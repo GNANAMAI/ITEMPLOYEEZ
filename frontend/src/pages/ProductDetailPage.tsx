@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { PageHero } from "@/components/layout/PageHero";
+import { Users } from "lucide-react";
+import { PageToolbar } from "@/components/layout/PageToolbar";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { useAuth } from "@/hooks/useAuth";
-import { useRazorpaySubscribe } from "@/hooks/useRazorpaySubscribe";
 import { api } from "@/services/api";
 import type { ProductDetail } from "@/types";
+import { renderRichText } from "@/utils/formatRichText";
 import "./ProductDetailPage.css";
+import "@/utils/formatRichText.css";
+import "@/components/ui/BackLink.css";
 
 export function ProductDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, hasActiveSubscription } = useAuth();
-  const { subscribe } = useRazorpaySubscribe();
+  const { isAuthenticated, hasMembership } = useAuth();
   const [detail, setDetail] = useState<ProductDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [subscribing, setSubscribing] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!slug) return;
@@ -28,92 +27,116 @@ export function ProductDetailPage() {
       .finally(() => setLoading(false));
   }, [slug]);
 
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     if (!isAuthenticated) {
-      navigate("/login");
+      navigate(`/login?returnTo=${encodeURIComponent(`/product-details/${slug}`)}`);
       return;
     }
-
-    setSubscribing(true);
-    setMessage("");
-    try {
-      const result = await subscribe("monthly");
-      if ("success" in result) {
-        setMessage("Subscription activated! Welcome to IT Employeez.");
-      }
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Subscription failed");
-    } finally {
-      setSubscribing(false);
-    }
+    navigate(`/subscription-checkout/${encodeURIComponent(slug!)}`);
   };
+
+  const companyPath = detail?.category_id ? `/product/${detail.category_id}` : "/it-apps";
 
   if (loading) {
     return (
-      <>
-        <PageHero title="Loading..." breadcrumbs={[{ label: "Home", path: "/" }, { label: "IT Products", path: "/it-apps" }]} />
-        <section className="section"><div className="container"><Skeleton className="detail-skeleton" /></div></section>
-      </>
+      <div className="product-detail-page">
+        <PageToolbar
+          items={[
+            { label: "Home", path: "/" },
+            { label: "IT Products", path: "/it-apps" },
+            { label: "Loading..." },
+          ]}
+          backFallback="/it-apps"
+        />
+        <section className="section">
+          <div className="container">
+            <Skeleton className="detail-layout-skeleton" />
+          </div>
+        </section>
+      </div>
     );
   }
 
   if (!detail) {
     return (
-      <>
-        <PageHero title="Not Found" breadcrumbs={[{ label: "Home", path: "/" }]} />
-        <section className="section"><div className="container"><p>Product not found.</p></div></section>
-      </>
+      <div className="product-detail-page">
+        <PageToolbar
+          items={[
+            { label: "Home", path: "/" },
+            { label: "IT Products", path: "/it-apps" },
+            { label: "Not found" },
+          ]}
+          backFallback="/it-apps"
+        />
+        <section className="section">
+          <div className="container">
+            <p>Product not found.</p>
+            <Link to="/it-apps">Browse IT Products</Link>
+          </div>
+        </section>
+      </div>
     );
   }
 
+  const hasAccess = hasMembership(detail.slug);
+
   return (
-    <>
-      <PageHero
-        title={detail.title}
-        breadcrumbs={[
+    <div className="product-detail-page">
+      <PageToolbar
+        items={[
           { label: "Home", path: "/" },
           { label: "IT Products", path: "/it-apps" },
+          { label: detail.category_name || "Company", path: companyPath },
           { label: detail.title },
         ]}
+        backFallback={companyPath}
       />
 
       <section className="section">
-        <div className="container detail-layout">
-          <div className="detail-gallery">
-            <img src={detail.image_url} alt={detail.title} className="detail-main-image" />
-            {detail.gallery_urls.length > 1 ? (
-              <div className="detail-thumbs">
-                {detail.gallery_urls.map((url) => (
-                  <img key={url} src={url} alt="" />
-                ))}
-              </div>
+        <div className="container detail-pro-layout">
+          <aside className="detail-pro-aside">
+            {detail.category_image_url ? (
+              <img src={detail.category_image_url} alt={detail.category_name || ""} className="detail-brand-logo" />
             ) : null}
+            <div className="detail-product-card">
+              <img src={detail.image_url} alt={detail.title} />
+              <span>{detail.title}</span>
+            </div>
+          </aside>
+
+          <div className="detail-pro-main">
+            <header className="detail-pro-header">
+              <h1>{detail.title}</h1>
+              {detail.subtitle ? <p className="detail-subtitle">{detail.subtitle}</p> : null}
+            </header>
+            <div className="detail-description">{renderRichText(detail.description)}</div>
           </div>
 
-          <div className="detail-info">
-            <Card>
-              <h2>{detail.title}</h2>
-              <p>{detail.description}</p>
-
-              {hasActiveSubscription ? (
-                <p className="detail-active">✓ Your membership is active</p>
-              ) : (
-                <Button variant="accent" size="lg" loading={subscribing} onClick={handleSubscribe}>
+          <aside className="detail-pro-member">
+            <div className="member-card">
+              <div className="member-card-icon">
+                <Users size={28} />
+              </div>
+              <p>Become a member to join this IT community</p>
+            </div>
+            {hasAccess ? (
+              <div className="member-active">
+                <p>Enjoy your community membership!</p>
+                <Link to={`/community-subscribe?product=${encodeURIComponent(detail.slug)}`}>
+                  Go to community →
+                </Link>
+              </div>
+            ) : (
+              <>
+                <p className="member-note">Subscribe to unlock discussions, resources, and peer support.</p>
+                <Button variant="primary" size="lg" className="detail-subscribe-btn" onClick={handleSubscribe}>
                   Subscribe Now
                 </Button>
-              )}
-
-              {message ? <p className="detail-message">{message}</p> : null}
-            </Card>
-
-            <Card className="member-promo">
-              <h3>Join the IT Employeez Community</h3>
-              <p>Get full access to resources, career tools, and peer support.</p>
-              <Link to="/signup">Create your account →</Link>
-            </Card>
-          </div>
+              </>
+            )}
+          </aside>
         </div>
       </section>
-    </>
+    </div>
   );
 }

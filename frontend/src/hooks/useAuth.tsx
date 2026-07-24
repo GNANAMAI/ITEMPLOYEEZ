@@ -8,19 +8,22 @@ import {
   type ReactNode,
 } from "react";
 import { api } from "@/services/api";
-import type { SubscriptionStatus, User } from "@/types";
+import type { Membership, SubscriptionStatus, User } from "@/types";
 
 interface AuthContextValue {
   user: User | null;
   subscription: SubscriptionStatus | null;
+  memberships: Membership[];
   loading: boolean;
   isAuthenticated: boolean;
   hasActiveSubscription: boolean;
+  hasMembership: (slug: string) => boolean;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<void>;
   register: (payload: Record<string, unknown>) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
   refreshSubscription: () => Promise<void>;
+  refreshMemberships: () => Promise<void>;
   setTokens: (accessToken: string, refreshToken: string) => void;
 }
 
@@ -29,7 +32,17 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [subscription, setSubscription] = useState<SubscriptionStatus | null>(null);
+  const [memberships, setMemberships] = useState<Membership[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const refreshMemberships = useCallback(async () => {
+    try {
+      const list = await api.getMyMemberships();
+      setMemberships(list);
+    } catch {
+      setMemberships([]);
+    }
+  }, []);
 
   const refreshSubscription = useCallback(async () => {
     try {
@@ -45,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!token) {
       setUser(null);
       setSubscription(null);
+      setMemberships([]);
       setLoading(false);
       return;
     }
@@ -52,16 +66,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const profile = await api.me();
       setUser(profile);
-      await refreshSubscription();
+      await Promise.all([refreshSubscription(), refreshMemberships()]);
     } catch {
       localStorage.removeItem("access_token");
       localStorage.removeItem("refresh_token");
       setUser(null);
       setSubscription(null);
+      setMemberships([]);
     } finally {
       setLoading(false);
     }
-  }, [refreshSubscription]);
+  }, [refreshSubscription, refreshMemberships]);
 
   useEffect(() => {
     refreshUser();
@@ -97,23 +112,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem("refresh_token");
     setUser(null);
     setSubscription(null);
+    setMemberships([]);
   }, []);
+
+  const hasMembership = useCallback(
+    (slug: string) => memberships.some((m) => m.is_active && m.product.slug === slug),
+    [memberships],
+  );
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
       subscription,
+      memberships,
       loading,
       isAuthenticated: Boolean(user),
-      hasActiveSubscription: Boolean(subscription?.is_active),
+      hasActiveSubscription: memberships.some((m) => m.is_active),
+      hasMembership,
       login,
       register,
       logout,
       refreshUser,
       refreshSubscription,
+      refreshMemberships,
       setTokens,
     }),
-    [user, subscription, loading, login, register, logout, refreshUser, refreshSubscription, setTokens],
+    [
+      user,
+      subscription,
+      memberships,
+      loading,
+      hasMembership,
+      login,
+      register,
+      logout,
+      refreshUser,
+      refreshSubscription,
+      refreshMemberships,
+      setTokens,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

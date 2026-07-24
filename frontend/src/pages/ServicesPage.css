@@ -1,8 +1,8 @@
 .services-section-live {
   background:
-    radial-gradient(ellipse 70% 60% at 10% 20%, rgba(20, 160, 119, 0.08), transparent),
-    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(11, 61, 145, 0.06), transparent),
-    #f4f7fa;
+    radial-gradient(ellipse 70% 60% at 10% 20%, rgba(225, 29, 72, 0.06), transparent),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(15, 23, 42, 0.05), transparent),
+    #f1f5f9;
   padding: 2.5rem 0 4rem;
 }
 

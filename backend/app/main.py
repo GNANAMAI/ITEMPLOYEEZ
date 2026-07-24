@@ -7,7 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.database import Base, SessionLocal, engine
-from app.routers import admin, auth, contact, legal, products, services, subscriptions
+from app.migrate import migrate_sqlite_schema
+from app import models  # noqa: F401 — register ORM models for create_all
+from app.routers import admin, auth, community, contact, legal, memberships, products, services, subscriptions
 from app.seed import seed_database
 
 settings = get_settings()
@@ -15,6 +17,7 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    migrate_sqlite_schema(engine)
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
@@ -42,6 +45,8 @@ app.include_router(services.router, prefix=API_PREFIX)
 app.include_router(contact.router, prefix=API_PREFIX)
 app.include_router(legal.router, prefix=API_PREFIX)
 app.include_router(subscriptions.router, prefix=API_PREFIX)
+app.include_router(memberships.router, prefix=API_PREFIX)
+app.include_router(community.router, prefix=API_PREFIX)
 app.include_router(admin.router, prefix=API_PREFIX)
 
 

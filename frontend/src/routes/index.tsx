@@ -1,9 +1,11 @@
 import { Routes, Route } from "react-router-dom";
+import { RequireAuth } from "@/components/auth/RequireAuth";
 import { HomePage } from "@/pages/HomePage";
 import { AboutPage } from "@/pages/AboutPage";
 import { ProductsCatalogPage } from "@/pages/ProductsCatalogPage";
 import { ProductCategoryPage } from "@/pages/ProductCategoryPage";
 import { ProductDetailPage } from "@/pages/ProductDetailPage";
+import { SubscriptionCheckoutPage } from "@/pages/SubscriptionCheckoutPage";
 import { CommunityPage } from "@/pages/CommunityPage";
 import { ServicesPage } from "@/pages/ServicesPage";
 import { ServiceDetailPage } from "@/pages/ServiceDetailPage";
@@ -24,9 +26,38 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/it-apps" element={<ProductsCatalogPage />} />
-      <Route path="/product/:id" element={<ProductCategoryPage />} />
-      <Route path="/product-details/:slug" element={<ProductDetailPage />} />
+      <Route
+        path="/it-apps"
+        element={
+          <RequireAuth>
+            <ProductsCatalogPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/product/:id"
+        element={
+          <RequireAuth>
+            <ProductCategoryPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/product-details/:slug"
+        element={
+          <RequireAuth>
+            <ProductDetailPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/subscription-checkout/:slug"
+        element={
+          <RequireAuth>
+            <SubscriptionCheckoutPage />
+          </RequireAuth>
+        }
+      />
       <Route path="/community-subscribe" element={<CommunityPage />} />
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/service-details/:slug" element={<ServiceDetailPage />} />

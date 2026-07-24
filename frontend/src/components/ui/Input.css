@@ -27,7 +27,7 @@
 .input-group textarea:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
   background: #fff;
 }
 

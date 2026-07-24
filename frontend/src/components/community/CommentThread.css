@@ -1,0 +1,110 @@
+.ch-comments {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+.ch-comments-muted {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.ch-comment-list {
+  list-style: none;
+  margin: 0 0 0.85rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ch-comment {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.ch-comment.solution .ch-comment-body {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.2);
+}
+
+.ch-comment-body {
+  flex: 1;
+  background: var(--color-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 0.8rem;
+}
+
+.ch-comment-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 0.25rem;
+}
+
+.ch-comment-head strong {
+  font-size: 0.85rem;
+}
+
+.ch-comment-head span {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.ch-comment-head em {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--color-success);
+  background: rgba(37, 99, 235, 0.1);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-pill);
+}
+
+.ch-comment-body p,
+.ch-comment-html {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.ch-comment-body p {
+  white-space: pre-wrap;
+}
+
+.ch-reply-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-muted);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: left;
+}
+
+.ch-reply-trigger:hover {
+  background: #fff;
+  border-color: #cbd5e1;
+  color: var(--color-text);
+}
+
+.ch-comments-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin: 0.5rem 0 0;
+}

@@ -21,7 +21,7 @@
 }
 
 .legal-tab.active {
-  background: rgba(13, 148, 136, 0.1);
+  background: rgba(225, 29, 72, 0.1);
   color: var(--color-accent);
-  border-color: rgba(13, 148, 136, 0.25);
+  border-color: rgba(225, 29, 72, 0.25);
 }

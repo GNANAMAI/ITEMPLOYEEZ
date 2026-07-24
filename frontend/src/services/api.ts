@@ -1,6 +1,15 @@
 import type {
+  CommunityComment,
+  CommunityExpert,
+  CommunityPost,
+  CommunityPostCreateBody,
+  CommunityStats,
   ContactMessage,
+  ExpertMessage,
   LegalPage,
+  Membership,
+  MembershipCheck,
+  MembershipGroup,
   ProductCategory,
   ProductDetail,
   RazorpayCheckout,
@@ -95,6 +104,9 @@ export const api = {
 
   getProduct: (id: number) => request<ProductCategory>(`/products/${id}`),
 
+  getProductDetailsForCategory: (id: number) =>
+    requestArray<ProductDetail>(`/products/${id}/details`),
+
   getProductDetails: () => requestArray<ProductDetail>("/products/details/list"),
 
   getProductDetail: (slug: string) =>
@@ -113,11 +125,82 @@ export const api = {
 
   getSubscriptionStatus: () => request<SubscriptionStatus>("/subscriptions/status"),
 
-  createSubscription: (plan_type: "monthly" | "yearly") =>
+  createSubscription: (product_slug: string, plan_type: "monthly" | "yearly" = "yearly") =>
     request<RazorpayCheckout>("/subscriptions/create", {
       method: "POST",
-      body: JSON.stringify({ plan_type }),
+      body: JSON.stringify({ product_slug, plan_type }),
     }),
+
+  getMyMemberships: () => requestArray<Membership>("/memberships/mine"),
+
+  getGroupedMemberships: () => requestArray<MembershipGroup>("/memberships/mine/grouped"),
+
+  checkMembership: (slug: string) =>
+    request<MembershipCheck>(`/memberships/check/${encodeURIComponent(slug)}`),
+
+  getCommunityPosts: (slug: string, postType: string) =>
+    requestArray<CommunityPost>(
+      `/communities/${encodeURIComponent(slug)}/posts?post_type=${encodeURIComponent(postType)}`,
+    ),
+
+  getCommunityStats: (slug: string) =>
+    request<CommunityStats>(`/communities/${encodeURIComponent(slug)}/stats`),
+
+  createCommunityPost: (slug: string, body: CommunityPostCreateBody) =>
+    request<CommunityPost>(`/communities/${encodeURIComponent(slug)}/posts`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+
+  updatePostStatus: (slug: string, postId: number, status: "open" | "resolved") =>
+    request<CommunityPost>(`/communities/${encodeURIComponent(slug)}/posts/${postId}/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    }),
+
+  getPostComments: (slug: string, postId: number) =>
+    requestArray<CommunityComment>(
+      `/communities/${encodeURIComponent(slug)}/posts/${postId}/comments`,
+    ),
+
+  createPostComment: (
+    slug: string,
+    postId: number,
+    body: { content: string; is_solution?: boolean },
+  ) =>
+    request<CommunityComment>(
+      `/communities/${encodeURIComponent(slug)}/posts/${postId}/comments`,
+      {
+        method: "POST",
+        body: JSON.stringify(body),
+      },
+    ),
+
+  getCommunityExperts: (slug: string) =>
+    requestArray<CommunityExpert>(`/communities/${encodeURIComponent(slug)}/experts`),
+
+  updateExpertProfile: (
+    slug: string,
+    body: { is_expert: boolean; expert_headline?: string; expert_bio?: string },
+  ) =>
+    request<CommunityExpert>(`/communities/${encodeURIComponent(slug)}/experts/me`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  getExpertThread: (slug: string, userId: number) =>
+    requestArray<ExpertMessage>(
+      `/communities/${encodeURIComponent(slug)}/experts/${userId}/thread`,
+    ),
+
+  sendExpertMessage: (slug: string, userId: number, content: string) =>
+    request<ExpertMessage>(
+      `/communities/${encodeURIComponent(slug)}/experts/${userId}/thread`,
+      {
+        method: "POST",
+        body: JSON.stringify({ content }),
+      },
+    ),
 };
 
 export { ApiError, API_URL };
