@@ -1,5 +1,11 @@
 export function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
+  // Ensure the string is treated as UTC if it doesn't have a timezone designator
+  const utcIso = iso.endsWith("Z") || iso.includes("+") || iso.includes("-") 
+    ? iso 
+    : `${iso}Z`;
+
+  // Date.parse/new Date converts UTC to the user's local system time automatically
+  const diff = Date.now() - new Date(utcIso).getTime();
   const minutes = Math.floor(diff / (1000 * 60));
 
   if (minutes < 1) return "Just now";
