@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Lightbulb, MessageCircle } from "lucide-react";
 import { api } from "@/services/api";
-import { htmlToPlainText, looksLikeHtml, sanitizeHtml } from "@/utils/sanitizeHtml";
+import { looksLikeHtml, sanitizeHtml } from "@/utils/sanitizeHtml";
 import type { CommunityComment, CommunityPost } from "@/types";
 import { ReplyModal } from "./ReplyModal";
 import { initials, timeAgo } from "./communityUtils";

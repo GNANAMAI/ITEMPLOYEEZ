@@ -1,7 +1,14 @@
+import type { CSSProperties } from "react";
 import "./Skeleton.css";
 
-export function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`skeleton ${className}`} aria-hidden />;
+export function Skeleton({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: CSSProperties;
+}) {
+  return <div className={`skeleton ${className}`} style={style} aria-hidden />;
 }
 
 export function ProductGridSkeleton() {
