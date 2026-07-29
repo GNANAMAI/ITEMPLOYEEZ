@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { HomePage } from "@/pages/HomePage";
 import { AboutPage } from "@/pages/AboutPage";
@@ -19,7 +19,23 @@ import {
   CancelPolicyPage,
   DisclaimerPage,
 } from "@/pages/legal/LegalPages";
-import { SubAdminLoginPage, SubAdminDashboardPage } from "@/pages/admin/AdminPages";
+import { AdminLayout } from "@/pages/admin/AdminLayout";
+import {
+  AdminAboutPage,
+  AdminBannersPage,
+  AdminCandidatesPage,
+  AdminCategoriesPage,
+  AdminContactDetailsPage,
+  AdminDashboardHome,
+  AdminLegalEditPage,
+  AdminLoginPage,
+  AdminMessagesPage,
+  AdminPaymentsPage,
+  AdminProductsPage,
+  AdminServicesPage,
+  AdminSubAdminsPage,
+  AdminSubscriptionAmountPage,
+} from "@/pages/admin/AdminPages";
 
 export function AppRoutes() {
   return (
@@ -69,8 +85,30 @@ export function AppRoutes() {
       <Route path="/privacy-policy" element={<PrivacyPage />} />
       <Route path="/cancel-policies" element={<CancelPolicyPage />} />
       <Route path="/disclaimer" element={<DisclaimerPage />} />
-      <Route path="/sub-admin/login" element={<SubAdminLoginPage />} />
-      <Route path="/sub-admin/dashboard" element={<SubAdminDashboardPage />} />
+
+      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="dashboard" element={<AdminDashboardHome />} />
+        <Route path="banners" element={<AdminBannersPage />} />
+        <Route path="contact-details" element={<AdminContactDetailsPage />} />
+        <Route path="sub-admins" element={<AdminSubAdminsPage />} />
+        <Route path="subscription-amount" element={<AdminSubscriptionAmountPage />} />
+        <Route path="categories" element={<AdminCategoriesPage />} />
+        <Route path="products" element={<AdminProductsPage />} />
+        <Route path="about" element={<AdminAboutPage />} />
+        <Route path="legal/:slug" element={<AdminLegalEditPage />} />
+        <Route path="services" element={<AdminServicesPage />} />
+        <Route path="messages" element={<AdminMessagesPage />} />
+        <Route path="candidates" element={<AdminCandidatesPage />} />
+        <Route path="contact-us" element={<AdminMessagesPage title="Contact Us Details" />} />
+        <Route path="payments" element={<AdminPaymentsPage />} />
+      </Route>
+
+      {/* Legacy sub-admin URLs */}
+      <Route path="/sub-admin/login" element={<Navigate to="/admin/login" replace />} />
+      <Route path="/sub-admin/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
+      <Route path="/sub-admin/*" element={<Navigate to="/admin/dashboard" replace />} />
     </Routes>
   );
 }

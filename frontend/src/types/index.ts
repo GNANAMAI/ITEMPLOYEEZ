@@ -158,17 +158,72 @@ export interface CommunityPostCreateBody {
 }
 
 export interface LegalPage {
+  id?: number;
   slug: string;
   title: string;
   content: string;
 }
 
 export interface ContactMessage {
+  id?: number;
   name: string;
   email: string;
   phone?: string;
   subject?: string;
   message: string;
+}
+
+export interface Banner {
+  id: number;
+  title: string;
+  image_url: string;
+  link_url: string | null;
+  sort_order: number;
+  is_active: boolean;
+  created_at?: string;
+}
+
+export interface ContactDetails {
+  phone: string;
+  phone_alt: string;
+  whatsapp: string;
+  email: string;
+  address: string;
+}
+
+export interface Candidate {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  job_title: string | null;
+  role: string;
+  is_active: boolean;
+  created_at?: string | null;
+}
+
+export interface PaymentHistoryItem {
+  id: number;
+  user_name: string;
+  user_email: string;
+  product_title: string;
+  status: string;
+  razorpay_subscription_id: string | null;
+  current_period_end: string | null;
+  created_at: string | null;
+}
+
+export interface DashboardStats {
+  categories: number;
+  products: number;
+  services: number;
+  candidates: number;
+  messages: number;
+  payments: number;
+  banners: number;
+  sub_admins: number;
+  recent_joins: Candidate[];
+  recent_subscriptions: PaymentHistoryItem[];
 }
 
 export interface RazorpayCheckout {
