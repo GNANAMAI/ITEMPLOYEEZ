@@ -8,7 +8,7 @@ const QUICK_LINKS = [
   { label: "IT Communities", path: "/community-subscribe" },
   { label: "Our Services", path: "/services" },
   { label: "Contact Us", path: "/contact" },
-  { label: "Login as Sub-Admin", path: "/admin/login" },
+  { label: "Login as Admin", path: "/login?mode=admin" },
 ];
 
 const POLICY_LINKS = [

@@ -28,7 +28,6 @@ import {
   AdminContactDetailsPage,
   AdminDashboardHome,
   AdminLegalEditPage,
-  AdminLoginPage,
   AdminMessagesPage,
   AdminPaymentsPage,
   AdminProductsPage,
@@ -86,7 +85,7 @@ export function AppRoutes() {
       <Route path="/cancel-policies" element={<CancelPolicyPage />} />
       <Route path="/disclaimer" element={<DisclaimerPage />} />
 
-      <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin/login" element={<Navigate to="/login?mode=admin" replace />} />
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardHome />} />
@@ -106,7 +105,7 @@ export function AppRoutes() {
       </Route>
 
       {/* Legacy sub-admin URLs */}
-      <Route path="/sub-admin/login" element={<Navigate to="/admin/login" replace />} />
+      <Route path="/sub-admin/login" element={<Navigate to="/login?mode=admin" replace />} />
       <Route path="/sub-admin/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
       <Route path="/sub-admin/*" element={<Navigate to="/admin/dashboard" replace />} />
     </Routes>

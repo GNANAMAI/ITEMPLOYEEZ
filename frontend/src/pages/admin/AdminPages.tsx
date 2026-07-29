@@ -1,7 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
+import { Link, useParams } from "react-router-dom";
 import { api } from "@/services/api";
 import type {
   Banner,
@@ -17,7 +15,6 @@ import type {
   User,
 } from "@/types";
 import { AdminPageHeader } from "./AdminLayout";
-import { SAMPLE_ADMIN_CREDS } from "./adminNav";
 import "../AuthPages.css";
 import "./AdminLayout.css";
 
@@ -49,70 +46,6 @@ function useAdminLoad<T>(loader: () => Promise<T>, deps: unknown[] = []) {
 
   return { data, loading, error, reload: () => setTick((t) => t + 1), setData };
 }
-
-export function AdminLoginPage() {
-  const [email, setEmail] = useState(SAMPLE_ADMIN_CREDS.email);
-  const [password, setPassword] = useState(SAMPLE_ADMIN_CREDS.password);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const tokens = await api.adminLogin({ email, password });
-      localStorage.setItem("access_token", tokens.access_token);
-      localStorage.setItem("refresh_token", tokens.refresh_token);
-      navigate("/admin/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="admin-login-page">
-      <div className="admin-login-card">
-        <span className="mono-label">Admin Dashboard</span>
-        <h1>Login as Admin</h1>
-        <p className="admin-muted">Manage banners, products, candidates, and site content.</p>
-        <form onSubmit={handleSubmit}>
-          <Input
-            label="Email address"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            label="Password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {error ? <p className="admin-error">{error}</p> : null}
-          <Button type="submit" variant="primary" loading={loading} className="auth-submit">
-            Login
-          </Button>
-        </form>
-        <div className="admin-login-hint">
-          Sample credentials: <code>{SAMPLE_ADMIN_CREDS.email}</code> /{" "}
-          <code>{SAMPLE_ADMIN_CREDS.password}</code>
-        </div>
-        <p className="auth-switch">
-          <Link to="/">← Back to site</Link>
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** Keep old route working */
-export const SubAdminLoginPage = AdminLoginPage;
 
 export function AdminDashboardHome() {
   const { data, loading, error } = useAdminLoad<DashboardStats>(() => api.adminStats());

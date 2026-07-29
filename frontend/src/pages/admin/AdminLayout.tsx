@@ -14,7 +14,7 @@ export function AdminLayout() {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      navigate("/admin/login", { replace: true });
+      navigate("/login?mode=admin", { replace: true });
       return;
     }
     api
@@ -26,14 +26,14 @@ export function AdminLayout() {
       .catch(() => {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        navigate("/admin/login", { replace: true });
+        navigate("/login?mode=admin", { replace: true });
       });
   }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    navigate("/admin/login");
+    navigate("/login?mode=admin");
   };
 
   if (checking) {
