@@ -4,6 +4,7 @@ import { CheckCircle2, Layers, ShieldCheck, Sparkles, Users } from "lucide-react
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
+import { resolveReturnTo } from "@/utils/navigation";
 import "./AuthPages.css";
 import "./SignupPage.css";
 
@@ -33,16 +34,7 @@ export function SignupPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const returnTo = (() => {
-    const raw = searchParams.get("returnTo");
-    if (!raw) return "/it-apps";
-    try {
-      const decoded = decodeURIComponent(raw);
-      return decoded.startsWith("/") ? decoded : "/it-apps";
-    } catch {
-      return "/it-apps";
-    }
-  })();
+  const returnTo = resolveReturnTo(searchParams, "/it-apps");
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -54,7 +46,12 @@ export function SignupPage() {
     setError("");
     try {
       await register(form);
-      navigate(returnTo);
+      // New members start in the product browse flow unless they came from a specific page.
+      const next =
+        returnTo.startsWith("/admin") || returnTo === "/"
+          ? "/it-apps"
+          : returnTo;
+      navigate(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -139,7 +136,11 @@ export function SignupPage() {
                 onChange={(e) => setForm({ ...form, agree_terms: e.target.checked })}
               />
               <span>
-                I agree with the <Link to="/terms-conditions">Terms Of Service</Link>.
+                I agree with the{" "}
+                <Link to="/terms-conditions" target="_blank" rel="noreferrer">
+                  Terms Of Service
+                </Link>
+                .
               </span>
             </label>
 

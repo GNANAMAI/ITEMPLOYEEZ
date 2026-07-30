@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/useAuth";
 import { api } from "@/services/api";
 import { SAMPLE_ADMIN_CREDS } from "@/pages/admin/adminNav";
+import { resolveReturnTo } from "@/utils/navigation";
 import "./AuthPages.css";
 import "./LoginPage.css";
 
@@ -49,14 +50,7 @@ const ADMIN_PERKS = [
 ];
 
 function getReturnPath(searchParams: URLSearchParams) {
-  const raw = searchParams.get("returnTo");
-  if (!raw) return "/it-apps";
-  try {
-    const decoded = decodeURIComponent(raw);
-    return decoded.startsWith("/") ? decoded : "/it-apps";
-  } catch {
-    return "/it-apps";
-  }
+  return resolveReturnTo(searchParams, "/it-apps");
 }
 
 export function LoginPage() {
@@ -110,7 +104,10 @@ export function LoginPage() {
     setError("");
     try {
       await login(email, password, rememberMe);
-      navigate(returnTo);
+      // Keep users in the intended flow (products → checkout → community).
+      const next =
+        returnTo.startsWith("/admin") ? "/it-apps" : returnTo;
+      navigate(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -126,7 +123,9 @@ export function LoginPage() {
       const tokens = await api.adminLogin({ email, password });
       localStorage.setItem("access_token", tokens.access_token);
       localStorage.setItem("refresh_token", tokens.refresh_token);
-      navigate("/admin/dashboard");
+      const next =
+        returnTo.startsWith("/admin") ? returnTo : "/admin/dashboard";
+      navigate(next);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Admin login failed");
     } finally {

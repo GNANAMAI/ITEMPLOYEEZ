@@ -107,7 +107,7 @@ export function AppRoutes() {
       {/* Legacy sub-admin URLs */}
       <Route path="/sub-admin/login" element={<Navigate to="/login?mode=admin" replace />} />
       <Route path="/sub-admin/dashboard" element={<Navigate to="/admin/dashboard" replace />} />
-      <Route path="/sub-admin/*" element={<Navigate to="/admin/dashboard" replace />} />
+      <Route path="/sub-admin/*" element={<Navigate to="/login?mode=admin" replace />} />
     </Routes>
   );
 }

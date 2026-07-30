@@ -134,6 +134,13 @@ export function CommunityPage() {
   if (!isAuthenticated) {
     return (
       <>
+        <PageToolbar
+          items={[
+            { label: "Home", path: "/" },
+            { label: "IT Communities" },
+          ]}
+          backFallback="/"
+        />
         <section className="community-banner">
           <div className="community-banner-overlay">
             <div className="container">
@@ -148,13 +155,18 @@ export function CommunityPage() {
             <Card className="gate-card">
               <Lock size={40} className="gate-icon" />
               <h2>Please Login/Signup to access IT Communities</h2>
-              <p>Join IT Employeez to unlock discussions, webinars, and exclusive member resources.</p>
+              <p>
+                Flow: create an account → browse IT Products → subscribe → unlock your community.
+              </p>
               <div className="gate-actions">
                 <Link to="/login?returnTo=%2Fcommunity-subscribe">
                   <Button variant="primary">Login</Button>
                 </Link>
                 <Link to="/signup?returnTo=%2Fcommunity-subscribe">
                   <Button variant="accent">Create Account</Button>
+                </Link>
+                <Link to="/it-apps">
+                  <Button variant="outline">Browse Products First</Button>
                 </Link>
               </div>
             </Card>
@@ -178,14 +190,18 @@ export function CommunityPage() {
   if (groups.length === 0) {
     return (
       <>
+        <PageToolbar
+          items={[
+            { label: "Home", path: "/" },
+            { label: "IT Communities" },
+          ]}
+          backFallback="/it-apps"
+        />
         <section className="community-banner community-banner-hub">
           <div className="container community-banner-content">
             <h1>Welcome to the IT Communities!</h1>
             <p>
-              To subscribe for a new IT Community,{" "}
-              <Link to="/it-apps" className="community-banner-link">
-                please click here
-              </Link>
+              You are logged in. Next step: choose a product and subscribe to unlock a community.
             </p>
           </div>
         </section>
@@ -193,10 +209,18 @@ export function CommunityPage() {
           <div className="container">
             <Card className="gate-card">
               <h2>Welcome, {user?.name}!</h2>
-              <p>You have not subscribed to any IT community yet. Browse products and subscribe to get access.</p>
-              <Link to="/it-apps">
-                <Button variant="accent">Browse IT Products</Button>
-              </Link>
+              <p>
+                No community subscriptions yet. Browse IT Products, open a product, then subscribe to
+                join that community.
+              </p>
+              <div className="gate-actions">
+                <Link to="/it-apps">
+                  <Button variant="accent">Browse IT Products</Button>
+                </Link>
+                <Link to="/services">
+                  <Button variant="outline">View Services</Button>
+                </Link>
+              </div>
             </Card>
           </div>
         </section>
@@ -209,9 +233,12 @@ export function CommunityPage() {
       <PageToolbar
         items={[
           { label: "Home", path: "/" },
-          { label: "IT Communities" },
+          { label: "IT Communities", path: "/community-subscribe" },
+          ...(selectedProduct
+            ? [{ label: selectedProduct.title }]
+            : [{ label: "Select a community" }]),
         ]}
-        backFallback="/"
+        backFallback="/it-apps"
         wide
       >
         <label className="community-search">

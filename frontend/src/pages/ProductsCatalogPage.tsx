@@ -36,7 +36,7 @@ export function ProductsCatalogPage() {
           { label: "IT Products" },
         ]}
         backFallback="/"
-        backLabel="Back"
+        backLabel="Back to Home"
       >
         <div className="it-products-search">
           <Search size={18} aria-hidden />
