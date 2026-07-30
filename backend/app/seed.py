@@ -3,6 +3,7 @@
 from sqlalchemy.orm import Session
 
 from app.config import get_settings
+from app.models.cms import Banner, SiteSetting
 from app.models.legal import LegalPage
 from app.models.product import ProductCategory, ProductDetail
 from app.models.service import Service
@@ -257,5 +258,43 @@ def seed_database(db: Session) -> None:
                 role="sub_admin",
             )
         )
+
+    if db.query(Banner).count() == 0:
+        db.add(
+            Banner(
+                title="Become Part Of Our Vibrant IT Community!",
+                image_url=f"{BASE_IMAGE}/1755680761.JPG",
+                link_url="/signup",
+                sort_order=1,
+                is_active=True,
+            )
+        )
+
+    default_settings = [
+        ("contact_phone", "+91-8712956595", "Primary Phone"),
+        ("contact_phone_alt", "+91-8712956594", "Alternate Phone"),
+        ("contact_whatsapp", "918712956594", "WhatsApp"),
+        ("contact_email", "santu.edi@gmail.com", "Email"),
+        ("contact_address", "Visakhapatnam, India", "Address"),
+        ("about_title", "About Us", "About Title"),
+        (
+            "about_content",
+            (
+                "The IT Employeez Community is a vibrant network designed for IT professionals to "
+                "connect, collaborate, and grow. Whether you're a developer, sysadmin, cybersecurity "
+                "expert, or tech enthusiast, this community provides a platform for knowledge sharing, "
+                "career advice, and industry trends.\n\n"
+                "With a focus on peer support, skill development, and networking, the IT Employeez "
+                "Community fosters innovation and problem-solving. Join a global community of "
+                "like-minded individuals and be part of a dynamic space where technology meets opportunity!"
+            ),
+            "About Content",
+        ),
+        ("default_subscription_price_paise", "9900", "Default Subscription Amount (paise)"),
+    ]
+    for key, value, label in default_settings:
+        existing = db.query(SiteSetting).filter(SiteSetting.key == key).first()
+        if not existing:
+            db.add(SiteSetting(key=key, value=value, label=label))
 
     db.commit()

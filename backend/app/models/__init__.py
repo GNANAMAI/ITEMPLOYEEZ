@@ -1,3 +1,4 @@
+from app.models.cms import Banner, SiteSetting
 from app.models.community import CommunityComment, CommunityExpertMessage, CommunityPost
 from app.models.contact import ContactMessage
 from app.models.legal import LegalPage
@@ -20,4 +21,6 @@ __all__ = [
     "CommunityComment",
     "CommunityExpertMessage",
     "LegalPage",
+    "Banner",
+    "SiteSetting",
 ]

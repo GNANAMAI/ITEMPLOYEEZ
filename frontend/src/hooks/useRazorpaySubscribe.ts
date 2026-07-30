@@ -46,7 +46,8 @@ export function useRazorpaySubscribe() {
 
       const keyId = import.meta.env.VITE_RAZORPAY_KEY_ID || checkout.key_id;
 
-      if (!checkout.subscription_id) {
+      const subscriptionId = checkout.subscription_id;
+      if (!subscriptionId) {
         throw new Error("Razorpay subscription was not created. Check backend logs and plan IDs.");
       }
 
@@ -56,7 +57,7 @@ export function useRazorpaySubscribe() {
         try {
           openRazorpayCheckout({
             keyId,
-            subscriptionId: checkout.subscription_id,
+            subscriptionId,
             name: "IT Employeez",
             description: checkout.product_title || "Community Membership",
             onSuccess: async () => {

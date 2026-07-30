@@ -12,7 +12,8 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith("/sub-admin");
+  const isAdmin =
+    location.pathname.startsWith("/admin") || location.pathname.startsWith("/sub-admin");
   const isAuthPage = ["/login", "/signup", "/candidate/forgot-password"].includes(
     location.pathname,
   );

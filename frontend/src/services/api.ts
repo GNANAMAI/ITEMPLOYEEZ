@@ -1,15 +1,20 @@
 import type {
+  Banner,
+  Candidate,
   CommunityComment,
   CommunityExpert,
   CommunityPost,
   CommunityPostCreateBody,
   CommunityStats,
+  ContactDetails,
   ContactMessage,
+  DashboardStats,
   ExpertMessage,
   LegalPage,
   Membership,
   MembershipCheck,
   MembershipGroup,
+  PaymentHistoryItem,
   ProductCategory,
   ProductDetail,
   RazorpayCheckout,
@@ -83,6 +88,76 @@ export const api = {
 
   adminLogin: (body: Record<string, unknown>) =>
     request<TokenResponse>("/admin/login", { method: "POST", body: JSON.stringify(body) }),
+
+  adminMe: () => request<User>("/admin/me"),
+
+  adminStats: () => request<DashboardStats>("/admin/stats"),
+
+  adminListBanners: () => requestArray<Banner>("/admin/banners"),
+  adminCreateBanner: (body: Record<string, unknown>) =>
+    request<Banner>("/admin/banners", { method: "POST", body: JSON.stringify(body) }),
+  adminDeleteBanner: (id: number) =>
+    request<{ message: string }>(`/admin/banners/${id}`, { method: "DELETE" }),
+
+  adminGetContactDetails: () => request<ContactDetails>("/admin/contact-details"),
+  adminUpdateContactDetails: (body: ContactDetails) =>
+    request<ContactDetails>("/admin/contact-details", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  adminGetAbout: () => request<{ title: string; content: string }>("/admin/about"),
+  adminUpdateAbout: (body: { title: string; content: string }) =>
+    request<{ title: string; content: string }>("/admin/about", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  adminListSubAdmins: () => requestArray<User>("/admin/sub-admins"),
+  adminCreateSubAdmin: (body: Record<string, unknown>) =>
+    request<User>("/admin/sub-admins", { method: "POST", body: JSON.stringify(body) }),
+  adminDeleteSubAdmin: (id: number) =>
+    request<{ message: string }>(`/admin/sub-admins/${id}`, { method: "DELETE" }),
+
+  adminListCategories: () => requestArray<ProductCategory>("/admin/categories"),
+  adminCreateCategory: (body: Record<string, unknown>) =>
+    request<ProductCategory>("/admin/categories", { method: "POST", body: JSON.stringify(body) }),
+  adminDeleteCategory: (id: number) =>
+    request<{ message: string }>(`/admin/categories/${id}`, { method: "DELETE" }),
+
+  adminListProducts: () => requestArray<ProductDetail>("/admin/products"),
+  adminCreateProduct: (body: Record<string, unknown>) =>
+    request<ProductDetail>("/admin/products", { method: "POST", body: JSON.stringify(body) }),
+  adminDeleteProduct: (id: number) =>
+    request<{ message: string }>(`/admin/products/${id}`, { method: "DELETE" }),
+  adminUpdateSubscriptionAmount: (
+    id: number,
+    body: { price_paise: number; billing_period: string },
+  ) =>
+    request<ProductDetail>(`/admin/products/${id}/subscription-amount`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  adminListServices: () => requestArray<Service>("/admin/services"),
+  adminCreateService: (body: Record<string, unknown>) =>
+    request<Service>("/admin/services", { method: "POST", body: JSON.stringify(body) }),
+  adminDeleteService: (id: number) =>
+    request<{ message: string }>(`/admin/services/${id}`, { method: "DELETE" }),
+
+  adminGetLegal: (slug: string) => request<LegalPage>(`/admin/legal/${slug}`),
+  adminUpdateLegal: (slug: string, body: { title?: string; content?: string }) =>
+    request<LegalPage>(`/admin/legal/${slug}`, { method: "PUT", body: JSON.stringify(body) }),
+
+  adminListMessages: () => requestArray<ContactMessage>("/admin/messages"),
+  adminDeleteMessage: (id: number) =>
+    request<{ message: string }>(`/admin/messages/${id}`, { method: "DELETE" }),
+
+  adminListCandidates: () => requestArray<Candidate>("/admin/candidates"),
+  adminToggleCandidate: (id: number) =>
+    request<Candidate>(`/admin/candidates/${id}/toggle-active`, { method: "PUT" }),
+
+  adminListPayments: () => requestArray<PaymentHistoryItem>("/admin/payments"),
 
   me: () => request<User>("/auth/me"),
 

@@ -111,7 +111,9 @@ See [`frontend/.env.example`](frontend/.env.example):
 | `/login`, `/signup` | Authentication |
 | `/candidate/forgot-password` | Password reset |
 | `/terms-conditions`, `/privacy-policy`, `/cancel-policies`, `/disclaimer` | Legal |
-| `/sub-admin/login`, `/sub-admin/dashboard` | Sub-admin portal |
+| `/login?mode=admin` | Admin login (same page as members; sample: `admin@itemployeez.com` / `Admin@12345`) |
+| `/admin/dashboard` | Full admin CMS (banners, products, candidates, payments, …) |
+| `/admin/login`, `/sub-admin/login` | Redirect to `/login?mode=admin` |
 
 ## User Workflow
 
