@@ -96,6 +96,8 @@ export const api = {
   adminListBanners: () => requestArray<Banner>("/admin/banners"),
   adminCreateBanner: (body: Record<string, unknown>) =>
     request<Banner>("/admin/banners", { method: "POST", body: JSON.stringify(body) }),
+  adminUpdateBanner: (id: number, body: Record<string, unknown>) =>
+    request<Banner>(`/admin/banners/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   adminDeleteBanner: (id: number) =>
     request<{ message: string }>(`/admin/banners/${id}`, { method: "DELETE" }),
 
@@ -116,18 +118,24 @@ export const api = {
   adminListSubAdmins: () => requestArray<User>("/admin/sub-admins"),
   adminCreateSubAdmin: (body: Record<string, unknown>) =>
     request<User>("/admin/sub-admins", { method: "POST", body: JSON.stringify(body) }),
+  adminUpdateSubAdmin: (id: number, body: Record<string, unknown>) =>
+    request<User>(`/admin/sub-admins/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   adminDeleteSubAdmin: (id: number) =>
     request<{ message: string }>(`/admin/sub-admins/${id}`, { method: "DELETE" }),
 
   adminListCategories: () => requestArray<ProductCategory>("/admin/categories"),
   adminCreateCategory: (body: Record<string, unknown>) =>
     request<ProductCategory>("/admin/categories", { method: "POST", body: JSON.stringify(body) }),
+  adminUpdateCategory: (id: number, body: Record<string, unknown>) =>
+    request<ProductCategory>(`/admin/categories/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   adminDeleteCategory: (id: number) =>
     request<{ message: string }>(`/admin/categories/${id}`, { method: "DELETE" }),
 
   adminListProducts: () => requestArray<ProductDetail>("/admin/products"),
   adminCreateProduct: (body: Record<string, unknown>) =>
     request<ProductDetail>("/admin/products", { method: "POST", body: JSON.stringify(body) }),
+  adminUpdateProduct: (id: number, body: Record<string, unknown>) =>
+    request<ProductDetail>(`/admin/products/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   adminDeleteProduct: (id: number) =>
     request<{ message: string }>(`/admin/products/${id}`, { method: "DELETE" }),
   adminUpdateSubscriptionAmount: (
@@ -142,12 +150,16 @@ export const api = {
   adminListServices: () => requestArray<Service>("/admin/services"),
   adminCreateService: (body: Record<string, unknown>) =>
     request<Service>("/admin/services", { method: "POST", body: JSON.stringify(body) }),
+  adminUpdateService: (id: number, body: Record<string, unknown>) =>
+    request<Service>(`/admin/services/${id}`, { method: "PUT", body: JSON.stringify(body) }),
   adminDeleteService: (id: number) =>
     request<{ message: string }>(`/admin/services/${id}`, { method: "DELETE" }),
 
   adminGetLegal: (slug: string) => request<LegalPage>(`/admin/legal/${slug}`),
   adminUpdateLegal: (slug: string, body: { title?: string; content?: string }) =>
     request<LegalPage>(`/admin/legal/${slug}`, { method: "PUT", body: JSON.stringify(body) }),
+
+  getAbout: () => request<{ title: string; content: string }>("/about"),
 
   adminListMessages: () => requestArray<ContactMessage>("/admin/messages"),
   adminDeleteMessage: (id: number) =>

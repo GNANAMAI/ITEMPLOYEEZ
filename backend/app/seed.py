@@ -145,55 +145,117 @@ LEGAL_PAGES = [
     {
         "slug": "terms-conditions",
         "title": "Terms & Conditions for IT Employeez",
-        "content": """Welcome to IT Emp. These Terms & Conditions outline the rules and regulations for the use of IT Emp's website and services.
+        "content": """Welcome to IT Emp. These Terms & Conditions outline the rules and regulations for the use of IT Emp's website and services. By accessing this website and using our services, you agree to comply with and be bound by these terms.
 
-**Definitions**
+**2. Definitions**
 - "IT Emp" refers to the owner of the website and provider of services.
 - "User" refers to any individual or entity accessing or using IT Emp's website and services.
-- "Services" refer to the various services provided by IT Emp.
+- "Services" refer to the various services provided by IT Emp, including but not limited to IT solutions, consulting, and resources.
 
-**Use of Services**
-Users agree to provide accurate information and are responsible for account security.
+**3. Use of Services**
+- Users agree to provide accurate and up-to-date information when registering for an account or using our services.
+- Users are responsible for maintaining the confidentiality of their account credentials and are liable for any activities under their account.
 
-**Intellectual Property**
-All content on the IT Employeez website is owned by IT Employeez.
+**4. Intellectual Property**
+- All content, including text, graphics, logos, and software, on the IT Employeez website is the property of IT Employeez and is protected by intellectual property laws.
+- Users may not reproduce, distribute, or create derivative works from any content on the IT Employeez website without explicit permission.
 
-**Contact:** info@itemployeez.com""",
+**5. Privacy**
+IT Employeez is committed to protecting users' privacy. Our Privacy Policy outlines how we collect, use, and protect your personal information.
+
+**6. Limitation of Liability**
+- IT Employeez is not liable for any direct, indirect, incidental, or consequential damages arising from the use of our services or inability to use our services.
+- IT Employeez makes no warranties or representations about the accuracy or completeness of the content on our website or the reliability of our services.
+
+**7. Termination**
+IT Employeez reserves the right to terminate or suspend a user's account and access to our services at any time, without notice, for any reason, including but not limited to breach of these Terms & Conditions.
+
+**8. Governing Law**
+These Terms & Conditions are governed by and construed in accordance with applicable laws, and any disputes arising out of or relating to these terms will be subject to the exclusive jurisdiction of the competent courts.
+
+**9. Changes to Terms & Conditions**
+IT Employeez reserves the right to update or modify these Terms & Conditions at any time. Users are encouraged to review these terms periodically. Continued use of our services after any changes constitutes acceptance of the new terms.
+
+**10. Contact Us**
+If you have any questions or concerns about these Terms & Conditions, please contact us at info@itemployeez.com.""",
     },
     {
         "slug": "privacy-policy",
         "title": "Privacy Policy",
-        "content": """Welcome to IT Emp! Your privacy is important to us.
+        "content": """Welcome to IT Emp! Your privacy is important to us. This Privacy Policy outlines how we collect, use, and protect your personal information. By using our services, you agree to the terms of this policy.
 
-We collect personal information (name, email, phone), professional information (job title, company), and usage data.
+**2. Information We Collect**
+We collect information to provide and improve our services. This may include:
+- Personal information (name, email address, phone number)
+- Professional information (job title, company, industry)
+- Usage data (IP address, browser type, operating system)
 
-We use your information to provide and improve our services, communicate with you, and comply with legal obligations.
+**3. How We Use Your Information**
+We use your information to:
+- Provide and improve our services
+- Communicate with you about our services
+- Personalize your experience
+- Respond to your inquiries
+- Comply with legal obligations
 
-We do not share your personal information with third parties except trusted partners under confidentiality.
+**4. Sharing Your Information**
+We do not share your personal information with third parties except as described in this policy. We may share information with trusted partners to provide services on our behalf, but only if they agree to keep this information confidential.
 
-**Contact:** info@itemployeez.com""",
+**5. Data Security**
+We take reasonable measures to protect your information from unauthorized access, disclosure, or destruction. However, no method of transmission over the internet is 100% secure, so we cannot guarantee its absolute security.
+
+**6. Your Rights**
+You have the right to access, correct, or delete your personal information. You can also request a copy of your data or withdraw consent for its use at any time.
+
+**7. Changes to This Policy**
+We may update this policy from time to time. We will notify you of any significant changes and encourage you to review the policy periodically.
+
+**8. Contact Us**
+If you have any questions or concerns about this policy, please contact us at info@itemployeez.com.""",
     },
     {
         "slug": "cancel-policies",
-        "title": "Cancel Policy for IT Employeez",
-        "content": """Cancellation requires a written request via email to info@itemployeez.com or through your account dashboard.
+        "title": "Cancellation & Refund Policy",
+        "content": """We understand that circumstances may change, and you may need to cancel your services with IT Emp. This Cancel Policy outlines the terms and conditions for cancelling our services. By using our services, you agree to this policy.
 
-**Notice Period:** 30 days required for all cancellations.
+**2. Cancellation Request**
+- To cancel your services, please submit a written cancellation request via email to info@itemployeez.com or through your account dashboard on our website.
+- Please include your account details and reason for cancellation in your request.
 
-**Refunds:** Full refund if cancelled within the first 15 days of subscription. No refunds after 15 days.
+**3. Notice Period**
+A notice period of 30 days is required for all service cancellations. This allows us to process your request and ensure a smooth transition.
 
-**Refund Processing:** Within 30 business days.
+**4. Refunds**
+- If you cancel your services within the first 15 days of subscription, you may be eligible for a full refund. After the initial 15 days, no refunds will be issued for the remaining subscription period.
+- Refunds will be processed within 30 business days of receiving the cancellation request.
 
-**Contact:** info@itemployeez.com""",
+**5. Service Termination**
+Upon cancellation, your access to IT Employeez services will be terminated at the end of the notice period. You will no longer be able to access your account or any associated services.
+
+**6. Outstanding Payments**
+Any outstanding payments or dues must be settled before the cancellation is processed. Failure to do so may result in additional charges or legal action.
+
+**7. Data Retention and Deletion**
+Upon termination of services, your data will be retained for a period of 30 days. After this period, all data will be permanently deleted from our systems. It is your responsibility to back up any data before cancellation.
+
+**8. Changes to Cancel Policy**
+IT Employeez reserves the right to update or modify this Cancel Policy at any time. Any changes will be communicated to you, and continued use of our services constitutes acceptance of the new terms.
+
+**9. Contact Us**
+If you have any questions or concerns about this Cancel Policy, please contact us at info@itemployeez.com.""",
     },
     {
         "slug": "disclaimer",
         "title": "Disclaimer",
-        "content": """The information on IT Employeez is provided for general informational purposes only.
+        "content": """**Disclaimer for IT Employeez**
 
-IT Employeez makes no warranties about the completeness or accuracy of content. Use of the site and services is at your own risk.
+This portal is intended for informational purposes only and does not constitute a legally binding agreement. The policies, procedures, and guidelines outlined herein are subject to change at the discretion of the company without prior notice.
 
-**Contact:** info@itemployeez.com""",
+The company is not responsible for any personal data stored on company devices or networks. Employees are advised to back up personal data and use company resources responsibly.
+
+The information on IT Employeez is provided for general informational purposes only. IT Employeez makes no warranties about the completeness or accuracy of content. Use of the site and services is at your own risk.
+
+This disclaimer does not create any contractual rights or obligations between the company and its employees or members. For further clarification, please contact us at info@itemployeez.com.""",
     },
 ]
 
@@ -244,8 +306,12 @@ def seed_database(db: Session) -> None:
         for item in SERVICES:
             db.add(Service(**item))
 
-    if db.query(LegalPage).count() == 0:
-        for item in LEGAL_PAGES:
+    for item in LEGAL_PAGES:
+        existing = db.query(LegalPage).filter(LegalPage.slug == item["slug"]).first()
+        if existing:
+            existing.title = item["title"]
+            existing.content = item["content"]
+        else:
             db.add(LegalPage(**item))
 
     admin = db.query(User).filter(User.email == settings.subadmin_email).first()

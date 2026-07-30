@@ -1,30 +1,45 @@
+import { useEffect, useState } from "react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Card } from "@/components/ui/Card";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { api } from "@/services/api";
+import { renderRichText } from "@/utils/formatRichText";
 import "./AboutPage.css";
+import "@/utils/formatRichText.css";
 
 export function AboutPage() {
+  const [title, setTitle] = useState("About Us");
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .getAbout()
+      .then((page) => {
+        setTitle(page.title || "About Us");
+        setContent(page.content || "");
+      })
+      .catch(() => {
+        setContent(
+          "The IT Employeez Community is a vibrant network designed for IT professionals to connect, collaborate, and grow.",
+        );
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
-      <PageHero title="About Us" breadcrumbs={[{ label: "Home", path: "/" }, { label: "About Us" }]} />
+      <PageHero title={title} breadcrumbs={[{ label: "Home", path: "/" }, { label: "About Us" }]} />
 
       <section className="section">
         <div className="container about-grid">
           <div className="about-content">
             <Card>
-              <p>
-                The IT Employeez Community is a vibrant network designed for IT professionals to
-                connect, collaborate, and grow. Whether you're a developer, sysadmin, cybersecurity
-                expert, or tech enthusiast, this community provides a platform for knowledge sharing,
-                career advice, and industry trends. Members can engage in discussions, attend webinars,
-                and access exclusive resources to stay ahead in the fast-evolving tech world.
-              </p>
-              <p>
-                With a focus on peer support, skill development, and networking, the IT Employeez
-                Community fosters innovation and problem-solving. From troubleshooting tech challenges
-                to exploring new tools and certifications, this group empowers IT professionals to excel
-                in their careers. Join a global community of like-minded individuals and be part of a
-                dynamic space where technology meets opportunity!
-              </p>
+              {loading ? (
+                <Skeleton style={{ height: 220 }} />
+              ) : (
+                <div className="legal-body">{renderRichText(content)}</div>
+              )}
             </Card>
           </div>
 

@@ -15,6 +15,7 @@ import type {
   User,
 } from "@/types";
 import { AdminPageHeader } from "./AdminLayout";
+import { AdminContentEditor } from "./AdminContentEditor";
 import "../AuthPages.css";
 import "./AdminLayout.css";
 
@@ -185,25 +186,44 @@ export function AdminDashboardHome() {
 }
 
 export function AdminBannersPage() {
+  const emptyForm = { title: "", image_url: "", link_url: "", sort_order: 0, is_active: true };
   const { data, loading, error, reload } = useAdminLoad<Banner[]>(() => api.adminListBanners());
-  const [form, setForm] = useState({
-    title: "",
-    image_url: "",
-    link_url: "",
-    sort_order: 0,
-    is_active: true,
-  });
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setEditId(null);
+    setForm(emptyForm);
+  };
+
+  const startEdit = (banner: Banner) => {
+    setEditId(banner.id);
+    setForm({
+      title: banner.title,
+      image_url: banner.image_url,
+      link_url: banner.link_url || "",
+      sort_order: banner.sort_order,
+      is_active: banner.is_active,
+    });
+    setMsg("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const save = async (event: FormEvent) => {
     event.preventDefault();
     setSaving(true);
     setMsg("");
     try {
-      await api.adminCreateBanner(form);
-      setForm({ title: "", image_url: "", link_url: "", sort_order: 0, is_active: true });
-      setMsg("Banner created");
+      if (editId != null) {
+        await api.adminUpdateBanner(editId, form);
+        setMsg("Banner updated");
+      } else {
+        await api.adminCreateBanner(form);
+        setMsg("Banner created");
+      }
+      resetForm();
       reload();
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Save failed");
@@ -217,6 +237,9 @@ export function AdminBannersPage() {
       <AdminPageHeader title="Banner List" subtitle="Homepage and marketing banners" />
       <div className="admin-panel" style={{ marginBottom: "1rem" }}>
         <form className="admin-form" onSubmit={save}>
+          <p className="admin-muted" style={{ margin: 0 }}>
+            {editId != null ? `Editing banner #${editId}` : "Add a new banner"}
+          </p>
           <div className="admin-form-row">
             <label>
               Title
@@ -260,10 +283,19 @@ export function AdminBannersPage() {
               Active
             </span>
           </label>
-          {msg ? <p className={msg.includes("fail") || msg.includes("Fail") ? "admin-error" : "admin-success"}>{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit" disabled={saving}>
-            {saving ? "Saving..." : "Add Banner"}
-          </button>
+          {msg ? (
+            <p className={msg.toLowerCase().includes("fail") ? "admin-error" : "admin-success"}>{msg}</p>
+          ) : null}
+          <div className="admin-actions">
+            <button className="admin-btn admin-btn-primary" type="submit" disabled={saving}>
+              {saving ? "Saving..." : editId != null ? "Update Banner" : "Add Banner"}
+            </button>
+            {editId != null ? (
+              <button type="button" className="admin-btn admin-btn-ghost" onClick={resetForm}>
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </form>
       </div>
       <div className="admin-panel">
@@ -294,16 +326,22 @@ export function AdminBannersPage() {
                     </span>
                   </td>
                   <td>
-                    <button
-                      type="button"
-                      className="admin-btn admin-btn-danger"
-                      onClick={async () => {
-                        await api.adminDeleteBanner(banner.id);
-                        reload();
-                      }}
-                    >
-                      Delete
-                    </button>
+                    <div className="admin-actions">
+                      <button type="button" className="admin-btn admin-btn-accent" onClick={() => startEdit(banner)}>
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="admin-btn admin-btn-danger"
+                        onClick={async () => {
+                          await api.adminDeleteBanner(banner.id);
+                          if (editId === banner.id) resetForm();
+                          reload();
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -401,19 +439,43 @@ export function AdminContactDetailsPage() {
 }
 
 export function AdminSubAdminsPage() {
+  const emptyForm = { name: "", email: "", password: "", phone: "" };
   const { data, loading, error, reload } = useAdminLoad<User[]>(() => api.adminListSubAdmins());
-  const [form, setForm] = useState({ name: "", email: "", password: "", phone: "" });
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setEditId(null);
+    setForm(emptyForm);
+  };
+
+  const startEdit = (user: User) => {
+    setEditId(user.id);
+    setForm({ name: user.name, email: user.email, password: "", phone: user.phone || "" });
+    setMsg("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const save = async (event: FormEvent) => {
     event.preventDefault();
     setSaving(true);
     setMsg("");
     try {
-      await api.adminCreateSubAdmin(form);
-      setForm({ name: "", email: "", password: "", phone: "" });
-      setMsg("Sub-admin created");
+      if (editId != null) {
+        const body: Record<string, unknown> = {
+          name: form.name,
+          phone: form.phone || null,
+        };
+        if (form.password.trim()) body.password = form.password;
+        await api.adminUpdateSubAdmin(editId, body);
+        setMsg("Sub-admin updated");
+      } else {
+        await api.adminCreateSubAdmin(form);
+        setMsg("Sub-admin created");
+      }
+      resetForm();
       reload();
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Save failed");
@@ -427,6 +489,9 @@ export function AdminSubAdminsPage() {
       <AdminPageHeader title="Sub Admin List" />
       <div className="admin-panel" style={{ marginBottom: "1rem" }}>
         <form className="admin-form" onSubmit={save}>
+          <p className="admin-muted" style={{ margin: 0 }}>
+            {editId != null ? `Editing sub-admin #${editId}` : "Add a new sub-admin"}
+          </p>
           <div className="admin-form-row">
             <label>
               Name
@@ -437,6 +502,7 @@ export function AdminSubAdminsPage() {
               <input
                 required
                 type="email"
+                disabled={editId != null}
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
@@ -444,11 +510,11 @@ export function AdminSubAdminsPage() {
           </div>
           <div className="admin-form-row">
             <label>
-              Password
+              Password {editId != null ? "(leave blank to keep)" : ""}
               <input
-                required
+                required={editId == null}
                 type="password"
-                minLength={8}
+                minLength={editId == null ? 8 : undefined}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
               />
@@ -458,10 +524,19 @@ export function AdminSubAdminsPage() {
               <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
             </label>
           </div>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit" disabled={saving}>
-            Add Sub Admin
-          </button>
+          {msg ? (
+            <p className={msg.toLowerCase().includes("fail") ? "admin-error" : "admin-success"}>{msg}</p>
+          ) : null}
+          <div className="admin-actions">
+            <button className="admin-btn admin-btn-primary" type="submit" disabled={saving}>
+              {editId != null ? "Update Sub Admin" : "Add Sub Admin"}
+            </button>
+            {editId != null ? (
+              <button type="button" className="admin-btn admin-btn-ghost" onClick={resetForm}>
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </form>
       </div>
       <div className="admin-panel">
@@ -483,20 +558,26 @@ export function AdminSubAdminsPage() {
                 <td>{user.email}</td>
                 <td>{user.phone || "—"}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn-danger"
-                    onClick={async () => {
-                      try {
-                        await api.adminDeleteSubAdmin(user.id);
-                        reload();
-                      } catch (err) {
-                        setMsg(err instanceof Error ? err.message : "Delete failed");
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="admin-actions">
+                    <button type="button" className="admin-btn admin-btn-accent" onClick={() => startEdit(user)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-danger"
+                      onClick={async () => {
+                        try {
+                          await api.adminDeleteSubAdmin(user.id);
+                          if (editId === user.id) resetForm();
+                          reload();
+                        } catch (err) {
+                          setMsg(err instanceof Error ? err.message : "Delete failed");
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -604,24 +685,49 @@ function SubscriptionRow({
 }
 
 export function AdminCategoriesPage() {
-  const { data, loading, error, reload } = useAdminLoad<ProductCategory[]>(() =>
-    api.adminListCategories(),
-  );
-  const [form, setForm] = useState({
+  const emptyForm = {
     name: "",
     slug: "",
     image_url: "",
     description: "",
     show_on_home: false,
-  });
+  };
+  const { data, loading, error, reload } = useAdminLoad<ProductCategory[]>(() =>
+    api.adminListCategories(),
+  );
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setEditId(null);
+    setForm(emptyForm);
+  };
+
+  const startEdit = (cat: ProductCategory) => {
+    setEditId(cat.id);
+    setForm({
+      name: cat.name,
+      slug: cat.slug,
+      image_url: cat.image_url,
+      description: cat.description || "",
+      show_on_home: cat.show_on_home,
+    });
+    setMsg("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const save = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      await api.adminCreateCategory(form);
-      setForm({ name: "", slug: "", image_url: "", description: "", show_on_home: false });
-      setMsg("Category created");
+      if (editId != null) {
+        await api.adminUpdateCategory(editId, form);
+        setMsg("Category updated");
+      } else {
+        await api.adminCreateCategory(form);
+        setMsg("Category created");
+      }
+      resetForm();
       reload();
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Save failed");
@@ -633,6 +739,9 @@ export function AdminCategoriesPage() {
       <AdminPageHeader title="Category List" />
       <div className="admin-panel" style={{ marginBottom: "1rem" }}>
         <form className="admin-form" onSubmit={save}>
+          <p className="admin-muted" style={{ margin: 0 }}>
+            {editId != null ? `Editing category #${editId}` : "Add a new category"}
+          </p>
           <div className="admin-form-row">
             <label>
               Name
@@ -666,10 +775,19 @@ export function AdminCategoriesPage() {
             />{" "}
             Show on home
           </label>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit">
-            Add Category
-          </button>
+          {msg ? (
+            <p className={msg.toLowerCase().includes("fail") ? "admin-error" : "admin-success"}>{msg}</p>
+          ) : null}
+          <div className="admin-actions">
+            <button className="admin-btn admin-btn-primary" type="submit">
+              {editId != null ? "Update Category" : "Add Category"}
+            </button>
+            {editId != null ? (
+              <button type="button" className="admin-btn admin-btn-ghost" onClick={resetForm}>
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </form>
       </div>
       <div className="admin-panel">
@@ -697,16 +815,22 @@ export function AdminCategoriesPage() {
                 <td>{cat.slug}</td>
                 <td>{cat.show_on_home ? "Yes" : "No"}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn-danger"
-                    onClick={async () => {
-                      await api.adminDeleteCategory(cat.id);
-                      reload();
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="admin-actions">
+                    <button type="button" className="admin-btn admin-btn-accent" onClick={() => startEdit(cat)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-danger"
+                      onClick={async () => {
+                        await api.adminDeleteCategory(cat.id);
+                        if (editId === cat.id) resetForm();
+                        reload();
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -718,9 +842,7 @@ export function AdminCategoriesPage() {
 }
 
 export function AdminProductsPage() {
-  const { data, loading, error, reload } = useAdminLoad<ProductDetail[]>(() => api.adminListProducts());
-  const cats = useAdminLoad<ProductCategory[]>(() => api.adminListCategories());
-  const [form, setForm] = useState({
+  const emptyForm = {
     slug: "",
     title: "",
     subtitle: "",
@@ -729,17 +851,49 @@ export function AdminProductsPage() {
     category_id: "" as string | number,
     price_paise: 9900,
     billing_period: "yearly",
-  });
+  };
+  const { data, loading, error, reload } = useAdminLoad<ProductDetail[]>(() => api.adminListProducts());
+  const cats = useAdminLoad<ProductCategory[]>(() => api.adminListCategories());
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setEditId(null);
+    setForm(emptyForm);
+  };
+
+  const startEdit = (p: ProductDetail) => {
+    setEditId(p.id);
+    setForm({
+      slug: p.slug,
+      title: p.title,
+      subtitle: p.subtitle || "",
+      description: p.description || "",
+      image_url: p.image_url,
+      category_id: p.category_id ?? "",
+      price_paise: p.price_paise,
+      billing_period: p.billing_period,
+    });
+    setMsg("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const save = async (event: FormEvent) => {
     event.preventDefault();
+    const payload = {
+      ...form,
+      category_id: form.category_id === "" ? null : Number(form.category_id),
+    };
     try {
-      await api.adminCreateProduct({
-        ...form,
-        category_id: form.category_id === "" ? null : Number(form.category_id),
-      });
-      setMsg("Product created");
+      if (editId != null) {
+        await api.adminUpdateProduct(editId, payload);
+        setMsg("Product updated");
+      } else {
+        await api.adminCreateProduct(payload);
+        setMsg("Product created");
+      }
+      resetForm();
       reload();
     } catch (err) {
       setMsg(err instanceof Error ? err.message : "Save failed");
@@ -751,6 +905,9 @@ export function AdminProductsPage() {
       <AdminPageHeader title="Product List" />
       <div className="admin-panel" style={{ marginBottom: "1rem" }}>
         <form className="admin-form" onSubmit={save}>
+          <p className="admin-muted" style={{ margin: 0 }}>
+            {editId != null ? `Editing product #${editId}` : "Add a new product"}
+          </p>
           <div className="admin-form-row">
             <label>
               Title
@@ -762,6 +919,10 @@ export function AdminProductsPage() {
             </label>
           </div>
           <div className="admin-form-row">
+            <label>
+              Subtitle
+              <input value={form.subtitle} onChange={(e) => setForm({ ...form, subtitle: e.target.value })} />
+            </label>
             <label>
               Category
               <select
@@ -776,15 +937,15 @@ export function AdminProductsPage() {
                 ))}
               </select>
             </label>
-            <label>
-              Image URL
-              <input
-                required
-                value={form.image_url}
-                onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-              />
-            </label>
           </div>
+          <label>
+            Image URL
+            <input
+              required
+              value={form.image_url}
+              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+            />
+          </label>
           <label>
             Description
             <textarea
@@ -792,10 +953,19 @@ export function AdminProductsPage() {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </label>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit">
-            Add Product
-          </button>
+          {msg ? (
+            <p className={msg.toLowerCase().includes("fail") ? "admin-error" : "admin-success"}>{msg}</p>
+          ) : null}
+          <div className="admin-actions">
+            <button className="admin-btn admin-btn-primary" type="submit">
+              {editId != null ? "Update Product" : "Add Product"}
+            </button>
+            {editId != null ? (
+              <button type="button" className="admin-btn admin-btn-ghost" onClick={resetForm}>
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </form>
       </div>
       <div className="admin-panel">
@@ -821,16 +991,22 @@ export function AdminProductsPage() {
                 <td>{p.category_name || "—"}</td>
                 <td>₹{(p.price_paise / 100).toFixed(0)}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn-danger"
-                    onClick={async () => {
-                      await api.adminDeleteProduct(p.id);
-                      reload();
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="admin-actions">
+                    <button type="button" className="admin-btn admin-btn-accent" onClick={() => startEdit(p)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-danger"
+                      onClick={async () => {
+                        await api.adminDeleteProduct(p.id);
+                        if (editId === p.id) resetForm();
+                        reload();
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -846,6 +1022,7 @@ export function AdminAboutPage() {
     api.adminGetAbout(),
   );
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   if (loading || !data) {
     return (
@@ -858,39 +1035,33 @@ export function AdminAboutPage() {
 
   return (
     <>
-      <AdminPageHeader title="About Us" />
-      <div className="admin-panel">
-        <form
-          className="admin-form wide"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            try {
-              const updated = await api.adminUpdateAbout(data);
-              setData(updated);
-              setMsg("About page saved");
-            } catch (err) {
-              setMsg(err instanceof Error ? err.message : "Save failed");
-            }
-          }}
-        >
-          <label>
-            Title
-            <input value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} />
-          </label>
-          <label>
-            Content
-            <textarea
-              style={{ minHeight: 220 }}
-              value={data.content}
-              onChange={(e) => setData({ ...data, content: e.target.value })}
-            />
-          </label>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit">
-            Save About Us
-          </button>
-        </form>
-      </div>
+      <AdminPageHeader
+        title="About Us"
+        subtitle="Edit the About page content shown on the public website"
+      />
+      <AdminContentEditor
+        title={data.title}
+        content={data.content}
+        onTitleChange={(value) => setData({ ...data, title: value })}
+        onContentChange={(value) => setData({ ...data, content: value })}
+        saving={saving}
+        message={msg}
+        submitLabel="Save About Us"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setSaving(true);
+          setMsg("");
+          try {
+            const updated = await api.adminUpdateAbout(data);
+            setData(updated);
+            setMsg("About page saved");
+          } catch (err) {
+            setMsg(err instanceof Error ? err.message : "Save failed");
+          } finally {
+            setSaving(false);
+          }
+        }}
+      />
     </>
   );
 }
@@ -902,6 +1073,7 @@ export function AdminLegalEditPage() {
     [slug],
   );
   const [msg, setMsg] = useState("");
+  const [saving, setSaving] = useState(false);
 
   const titles: Record<string, string> = {
     "privacy-policy": "Privacy & Policy",
@@ -921,50 +1093,59 @@ export function AdminLegalEditPage() {
 
   return (
     <>
-      <AdminPageHeader title={titles[slug] || data.title} />
-      <div className="admin-panel">
-        <form
-          className="admin-form wide"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            try {
-              const updated = await api.adminUpdateLegal(slug, {
-                title: data.title,
-                content: data.content,
-              });
-              setData(updated);
-              setMsg("Saved");
-            } catch (err) {
-              setMsg(err instanceof Error ? err.message : "Save failed");
-            }
-          }}
-        >
-          <label>
-            Title
-            <input value={data.title} onChange={(e) => setData({ ...data, title: e.target.value })} />
-          </label>
-          <label>
-            Content
-            <textarea
-              style={{ minHeight: 280 }}
-              value={data.content}
-              onChange={(e) => setData({ ...data, content: e.target.value })}
-            />
-          </label>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit">
-            Save Page
-          </button>
-        </form>
-      </div>
+      <AdminPageHeader
+        title={titles[slug] || data.title}
+        subtitle="Edit content, then switch to Preview to see how it looks publicly"
+      />
+      <AdminContentEditor
+        title={data.title}
+        content={data.content}
+        previewHeading={data.title}
+        onTitleChange={(value) => setData({ ...data, title: value })}
+        onContentChange={(value) => setData({ ...data, content: value })}
+        saving={saving}
+        message={msg}
+        submitLabel="Save Page"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setSaving(true);
+          setMsg("");
+          try {
+            const updated = await api.adminUpdateLegal(slug, {
+              title: data.title,
+              content: data.content,
+            });
+            setData(updated);
+            setMsg("Page content saved");
+          } catch (err) {
+            setMsg(err instanceof Error ? err.message : "Save failed");
+          } finally {
+            setSaving(false);
+          }
+        }}
+      />
     </>
   );
 }
 
 export function AdminServicesPage() {
+  const emptyForm = { slug: "", title: "", excerpt: "", content: "" };
   const { data, loading, error, reload } = useAdminLoad<Service[]>(() => api.adminListServices());
-  const [form, setForm] = useState({ slug: "", title: "", excerpt: "", content: "" });
+  const [form, setForm] = useState(emptyForm);
+  const [editId, setEditId] = useState<number | null>(null);
   const [msg, setMsg] = useState("");
+
+  const resetForm = () => {
+    setEditId(null);
+    setForm(emptyForm);
+  };
+
+  const startEdit = (s: Service) => {
+    setEditId(s.id);
+    setForm({ slug: s.slug, title: s.title, excerpt: s.excerpt, content: s.content });
+    setMsg("");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <>
@@ -975,15 +1156,23 @@ export function AdminServicesPage() {
           onSubmit={async (e) => {
             e.preventDefault();
             try {
-              await api.adminCreateService(form);
-              setForm({ slug: "", title: "", excerpt: "", content: "" });
-              setMsg("Service created");
+              if (editId != null) {
+                await api.adminUpdateService(editId, form);
+                setMsg("Service updated");
+              } else {
+                await api.adminCreateService(form);
+                setMsg("Service created");
+              }
+              resetForm();
               reload();
             } catch (err) {
               setMsg(err instanceof Error ? err.message : "Save failed");
             }
           }}
         >
+          <p className="admin-muted" style={{ margin: 0 }}>
+            {editId != null ? `Editing service #${editId}` : "Add a new service"}
+          </p>
           <div className="admin-form-row">
             <label>
               Title
@@ -1002,10 +1191,19 @@ export function AdminServicesPage() {
             Content
             <textarea required value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
           </label>
-          {msg ? <p className="admin-success">{msg}</p> : null}
-          <button className="admin-btn admin-btn-primary" type="submit">
-            Add Service
-          </button>
+          {msg ? (
+            <p className={msg.toLowerCase().includes("fail") ? "admin-error" : "admin-success"}>{msg}</p>
+          ) : null}
+          <div className="admin-actions">
+            <button className="admin-btn admin-btn-primary" type="submit">
+              {editId != null ? "Update Service" : "Add Service"}
+            </button>
+            {editId != null ? (
+              <button type="button" className="admin-btn admin-btn-ghost" onClick={resetForm}>
+                Cancel
+              </button>
+            ) : null}
+          </div>
         </form>
       </div>
       <div className="admin-panel">
@@ -1025,16 +1223,22 @@ export function AdminServicesPage() {
                 <td>{s.title}</td>
                 <td>{s.slug}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn-danger"
-                    onClick={async () => {
-                      await api.adminDeleteService(s.id);
-                      reload();
-                    }}
-                  >
-                    Delete
-                  </button>
+                  <div className="admin-actions">
+                    <button type="button" className="admin-btn admin-btn-accent" onClick={() => startEdit(s)}>
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-btn admin-btn-danger"
+                      onClick={async () => {
+                        await api.adminDeleteService(s.id);
+                        if (editId === s.id) resetForm();
+                        reload();
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

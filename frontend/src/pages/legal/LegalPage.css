@@ -1,12 +1,80 @@
 .legal-content {
-  max-width: 800px;
+  max-width: 860px;
 }
 
-.legal-body p {
+.legal-body {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.legal-body h2 {
+  margin: 0 0 1.25rem;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-primary);
+  padding-bottom: 0.85rem;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.legal-body .rich-text-heading,
+.legal-body .rich-text-label {
+  margin: 1.5rem 0 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  position: relative;
+  padding-left: 0.85rem;
+}
+
+.legal-body .rich-text-heading::before,
+.legal-body .rich-text-label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.2em;
+  bottom: 0.2em;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.legal-body .rich-text-paragraph {
+  margin: 0 0 0.95rem;
   color: var(--color-text-muted);
   line-height: 1.8;
+  font-size: 1rem;
 }
 
-.legal-body p strong {
+.legal-body .rich-text-paragraph strong {
   color: var(--color-text);
+  font-weight: 700;
+}
+
+.legal-body .rich-text-list {
+  margin: 0 0 1.1rem;
+  padding: 0.85rem 0.85rem 0.85rem 1.6rem;
+  background: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  line-height: 1.7;
+}
+
+.legal-body .rich-text-list li {
+  margin-bottom: 0.4rem;
+}
+
+.legal-body .rich-text-list li:last-child {
+  margin-bottom: 0;
+}
+
+.legal-body .rich-text-labeled {
+  margin-bottom: 0.5rem;
+}
+
+.about-content .legal-body .rich-text-paragraph {
+  color: var(--color-text-muted);
+  font-size: 1.02rem;
+  line-height: 1.85;
 }

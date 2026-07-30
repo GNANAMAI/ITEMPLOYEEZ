@@ -41,10 +41,10 @@ export function LegalPageView({ slug, breadcrumbLabel }: LegalPageViewProps) {
             {loading ? (
               <Skeleton style={{ height: 300 }} />
             ) : (
-              <>
+              <div className="legal-body">
                 <h2>{title}</h2>
-                <div className="legal-body">{renderRichText(content)}</div>
-              </>
+                {renderRichText(content)}
+              </div>
             )}
           </Card>
         </div>
