@@ -1,11 +1,30 @@
 """Community posts, comments, and expert messages within a product subscription."""
 
-from datetime import datetime
-
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text
+from datetime import datetime, timezone
+import sqlalchemy as sa
+from sqlalchemy import Boolean, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+# 🛠️ Custom SQLite Timezone Decorator
+class UTCDateTime(sa.TypeDecorator):
+    """Ensures datetimes saved/read from SQLite always preserve UTC awareness."""
+    impl = sa.DateTime
+    cache_ok = True
+
+    def process_bind_param(self, value, dialect):
+        if value is not None and value.tzinfo is not None:
+            # Convert to UTC and strip tzinfo so SQLite saves a clean ISO-like string
+            return value.astimezone(timezone.utc).replace(tzinfo=None)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None and value.tzinfo is None:
+            # Tag raw strings coming from SQLite cleanly as explicit UTC
+            return value.replace(tzinfo=timezone.utc)
+        return value
 
 
 class CommunityPost(Base):
@@ -22,8 +41,15 @@ class CommunityPost(Base):
     location: Mapped[str | None] = mapped_column(String(255), nullable=True)
     contact_info: Mapped[str | None] = mapped_column(String(500), nullable=True)
     resolved_by_user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
-    resolved_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    
+    # Updated to custom UTCDateTime
+    resolved_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    
+    # Updated to custom UTCDateTime and replaced deprecated datetime.utcnow
+    created_at: Mapped[datetime] = mapped_column(
+        UTCDateTime, 
+        default=lambda: datetime.now(timezone.utc)
+    )
 
     user = relationship("User", back_populates="community_posts", foreign_keys=[user_id])
     resolved_by = relationship("User", foreign_keys=[resolved_by_user_id])
@@ -39,7 +65,11 @@ class CommunityComment(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     is_solution: Mapped[bool] = mapped_column(Boolean, default=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+  
+    created_at: Mapped[datetime] = mapped_column(
+        UTCDateTime, 
+        default=lambda: datetime.now(timezone.utc)
+    )
 
     post = relationship("CommunityPost", back_populates="comments")
     user = relationship("User", back_populates="community_comments")
@@ -53,7 +83,11 @@ class CommunityExpertMessage(Base):
     from_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     to_user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    
+    created_at: Mapped[datetime] = mapped_column(
+        UTCDateTime, 
+        default=lambda: datetime.now(timezone.utc)
+    )
 
     product_detail = relationship("ProductDetail")
     from_user = relationship("User", foreign_keys=[from_user_id])
