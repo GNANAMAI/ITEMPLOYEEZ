@@ -643,11 +643,14 @@ function SubscriptionRow({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
+    if (!/^\d*\.?\d*$/.test(val)) {
+      return;
+    }
     const digitCount = val.replace('.', '').length;
 
     setError('');
-    if (val.startsWith('0')) {
-      setError('Do not start with 0.');
+    if (val.startsWith("0") && val.length > 1 && !val.startsWith("0.")) {
+      setError("Do not start with 0.");
       return;
     }
     if (digitCount > 7) {
@@ -664,9 +667,8 @@ function SubscriptionRow({
       <td>{product.title}</td>
       <td>
        <input
-          type="number"
-          min={1}
-          step="any"
+          type="text"
+          inputMode="decimal"
           value={rupees}
           onChange={handleChange}
           style={{ width: 100, border: error ? '1px thin solid red' : '1px solid #ccc'}}
