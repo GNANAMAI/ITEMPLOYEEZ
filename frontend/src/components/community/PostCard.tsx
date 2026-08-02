@@ -54,38 +54,6 @@ export function PostCard({
   const [resolving, setResolving] = useState(false);
   const [localPost, setLocalPost] = useState(post);
   const [error, setError] = useState("");
-  const [formattedTime, setFormattedTime] = useState(() => timeAgo(localPost.created_at));
-
-
-  useEffect(() => {
-    // 1. Immediately calculate the time string on mount/prop change
-    setFormattedTime(timeAgo(localPost.created_at));
-
-    // 2. Calculate the exact age of the post in milliseconds
-    const postTime = new Date(localPost.created_at).getTime();
-    const ageMs = Date.now() - postTime;
-
-    const ONE_MINUTE = 60 * 1000;
-    const ONE_HOUR = 60 * 60 * 1000;
-    const ONE_DAY = 24 * 60 * 60 * 1000;
-
-    // 3. Dynamically pick the best interval delay based on post age
-    let intervalDelay = ONE_DAY;
-
-    if (ageMs < ONE_HOUR) {
-      intervalDelay = ONE_MINUTE;
-    } else if (ageMs < ONE_DAY) {
-      intervalDelay = ONE_HOUR;
-    }
-
-    // 4. Set up the interval with our calculated smart delay
-    const intervalId = setInterval(() => {
-      setFormattedTime(timeAgo(localPost.created_at));
-    }, intervalDelay);
-
-    // 5. Clean up the interval on unmount
-    return () => clearInterval(intervalId);
-  }, [localPost.created_at]);
 
   useEffect(() => {
     setLocalPost(post);
@@ -126,7 +94,7 @@ export function PostCard({
                   <span className="ch-dot">·</span>
                 </>
               ) : null}
-              <span>{formattedTime}</span>
+              <span>{timeAgo(localPost.created_at)}</span>
               <span className="ch-dot">·</span>
               <Globe size={12} aria-hidden />
             </div>

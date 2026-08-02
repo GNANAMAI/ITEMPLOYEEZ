@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { withReturnTo } from "@/utils/navigation";
 import "./TopNav.css";
 
+
 const NAV_LINKS = [
   { label: "IT Products", path: "/it-apps" },
   { label: "IT Communities", path: "/community-subscribe" },
@@ -29,6 +30,28 @@ export function TopNav() {
     setMenuOpen(false);
     navigate("/", { replace: true });
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setUserMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+
+      if (!target.closest(".nav-user-menu")) {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="top-nav">
@@ -75,6 +98,7 @@ export function TopNav() {
                 className="nav-welcome-btn"
                 onClick={() => setUserMenuOpen((prev) => !prev)}
                 aria-expanded={userMenuOpen}
+                aria-haspopup="menu"
               >
                 Welcome, {user?.name}
                 <ChevronDown size={16} />
@@ -96,7 +120,7 @@ export function TopNav() {
                     Logout
                   </button>
                 </div>
-              ) : null}
+              )}
             </div>
           ) : (
             <>
