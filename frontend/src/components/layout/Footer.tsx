@@ -15,9 +15,18 @@ const POLICY_LINKS = [
   { label: "Privacy & Policy", path: "/privacy-policy" },
   { label: "Terms & Conditions", path: "/terms-conditions" },
   { label: "Cancellation & Refund Policy", path: "/cancel-policies" },
+  { label: "Disclaimer", path: "/disclaimer" },
+];
+
+const FLOW_STEPS = [
+  { step: "1", label: "Browse Products", path: "/it-apps" },
+  { step: "2", label: "Subscribe", path: "/it-apps" },
+  { step: "3", label: "Join Community", path: "/community-subscribe" },
 ];
 
 export function Footer() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
@@ -28,6 +37,19 @@ export function Footer() {
             We aim to be the catalyst for innovation and success, providing the tools and resources
             necessary for IT professionals to excel.
           </p>
+          <div className="footer-flow">
+            <p className="footer-flow-label">How it works</p>
+            <ol>
+              {FLOW_STEPS.map((item) => (
+                <li key={item.step}>
+                  <Link to={item.path}>
+                    <span>{item.step}</span>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
         <div>
@@ -55,7 +77,7 @@ export function Footer() {
 
       <div className="footer-bottom">
         <div className="container">
-          <p>©2025 IT Employeez. All Rights Reserved.</p>
+          <p>©{year} IT Employeez. All Rights Reserved.</p>
         </div>
       </div>
     </footer>

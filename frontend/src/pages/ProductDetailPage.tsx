@@ -29,7 +29,9 @@ export function ProductDetailPage() {
 
   const handleSubscribe = () => {
     if (!isAuthenticated) {
-      navigate(`/login?returnTo=${encodeURIComponent(`/product-details/${slug}`)}`);
+      navigate(
+        `/login?returnTo=${encodeURIComponent(`/subscription-checkout/${encodeURIComponent(slug!)}`)}`,
+      );
       return;
     }
     navigate(`/subscription-checkout/${encodeURIComponent(slug!)}`);

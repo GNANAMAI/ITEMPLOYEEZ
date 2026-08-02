@@ -5,16 +5,24 @@ import "./BackLink.css";
 interface BackLinkProps {
   fallback?: string;
   label?: string;
+  /** Prefer the explicit funnel path instead of browser history (production-safe). */
+  preferFallback?: boolean;
 }
 
-export function BackLink({ fallback = "/it-apps", label = "Back" }: BackLinkProps) {
+export function BackLink({
+  fallback = "/it-apps",
+  label = "Back",
+  preferFallback = true,
+}: BackLinkProps) {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    const historyIdx = (window.history.state as { idx?: number } | null)?.idx;
-    if (typeof historyIdx === "number" && historyIdx > 0) {
-      navigate(-1);
-      return;
+    if (!preferFallback) {
+      const historyIdx = (window.history.state as { idx?: number } | null)?.idx;
+      if (typeof historyIdx === "number" && historyIdx > 0) {
+        navigate(-1);
+        return;
+      }
     }
     navigate(fallback);
   };

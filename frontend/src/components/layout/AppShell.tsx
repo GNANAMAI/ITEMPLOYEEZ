@@ -4,6 +4,8 @@ import { TopNav } from "@/components/layout/TopNav";
 import { Footer } from "@/components/layout/Footer";
 import { FloatingContact } from "@/components/layout/FloatingContact";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/hooks/useAuth";
+import { withReturnTo } from "@/utils/navigation";
 import "./AppShell.css";
 
 interface AppShellProps {
@@ -12,13 +14,15 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
+  const { isAuthenticated } = useAuth();
   const isAdmin =
     location.pathname.startsWith("/admin") || location.pathname.startsWith("/sub-admin");
   const isAuthPage = ["/login", "/signup", "/candidate/forgot-password"].includes(
     location.pathname,
   );
   const showHomeCta = location.pathname === "/";
-  const showCommunityCta = location.pathname === "/community-subscribe";
+  const showCommunityCta = location.pathname === "/community-subscribe" && !isAuthenticated;
+  const communityReturn = "/community-subscribe" + location.search;
 
   if (isAdmin) {
     return <div className="app-shell admin-shell">{children}</div>;
@@ -32,7 +36,7 @@ export function AppShell({ children }: AppShellProps) {
       <FloatingContact />
       {showHomeCta ? (
         <div className="mobile-sticky-cta">
-          <Link to="/signup">
+          <Link to={withReturnTo("/signup", "/it-apps")}>
             <Button variant="accent" size="sm">
               Join
             </Button>
@@ -46,12 +50,12 @@ export function AppShell({ children }: AppShellProps) {
       ) : null}
       {showCommunityCta ? (
         <div className="mobile-sticky-cta">
-          <Link to="/login">
+          <Link to={withReturnTo("/login", communityReturn)}>
             <Button variant="primary" size="sm">
               Login
             </Button>
           </Link>
-          <Link to="/signup">
+          <Link to={withReturnTo("/signup", communityReturn)}>
             <Button variant="accent" size="sm">
               Sign Up
             </Button>

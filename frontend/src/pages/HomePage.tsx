@@ -104,7 +104,7 @@ export function HomePage() {
               your skills, and stay ahead in the tech industry — together.
             </p>
             <div className="hero-actions">
-              <Link to="/signup">
+              <Link to="/signup?returnTo=%2Fit-apps">
                 <Button variant="accent" size="lg">
                   Join IT Employeez
                 </Button>
@@ -115,6 +115,17 @@ export function HomePage() {
                 </Button>
               </Link>
             </div>
+            <ol className="hero-flow">
+              <li>
+                <span>1</span> Sign up
+              </li>
+              <li>
+                <span>2</span> Browse products
+              </li>
+              <li>
+                <span>3</span> Subscribe &amp; join community
+              </li>
+            </ol>
           </div>
 
           <div className="hero-pro-panel fade-up" aria-label="IT community preview">

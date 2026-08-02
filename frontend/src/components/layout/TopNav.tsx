@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { withReturnTo } from "@/utils/navigation";
 import "./TopNav.css";
 
 
@@ -9,12 +10,26 @@ const NAV_LINKS = [
   { label: "IT Products", path: "/it-apps" },
   { label: "IT Communities", path: "/community-subscribe" },
   { label: "Our Services", path: "/services" },
+  { label: "About", path: "/about" },
+  { label: "Contact", path: "/contact" },
 ];
 
 export function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const returnTo = location.pathname + location.search;
+  const loginHref = withReturnTo("/login", returnTo);
+  const signupHref = withReturnTo("/signup", returnTo);
+
+  const handleLogout = () => {
+    logout();
+    setUserMenuOpen(false);
+    setMenuOpen(false);
+    navigate("/", { replace: true });
+  };
 
   const location = useLocation();
 
@@ -59,22 +74,15 @@ export function TopNav() {
           ))}
           <div className="nav-mobile-actions">
             {isAuthenticated ? (
-              <button
-                type="button"
-                className="nav-register-btn"
-                onClick={() => {
-                  logout();
-                  setMenuOpen(false);
-                }}
-              >
+              <button type="button" className="nav-register-btn" onClick={handleLogout}>
                 Logout
               </button>
             ) : (
               <>
-                <Link to="/login" className="nav-text-btn" onClick={() => setMenuOpen(false)}>
+                <Link to={loginHref} className="nav-text-btn" onClick={() => setMenuOpen(false)}>
                   Login
                 </Link>
-                <Link to="/signup" className="nav-register-btn" onClick={() => setMenuOpen(false)}>
+                <Link to={signupHref} className="nav-register-btn" onClick={() => setMenuOpen(false)}>
                   Join/Signup
                 </Link>
               </>
@@ -95,33 +103,20 @@ export function TopNav() {
                 Welcome, {user?.name}
                 <ChevronDown size={16} />
               </button>
-
-              {userMenuOpen && (
-                <div className="nav-user-dropdown" role="menu">
-                  <Link
-                    to="/community-subscribe"
-                    onClick={() => setUserMenuOpen(false)}
-                    role="menuitem"
-                  >
+              {userMenuOpen ? (
+                <div className="nav-user-dropdown">
+                  <Link to="/it-apps" onClick={() => setUserMenuOpen(false)}>
+                    Browse Products
+                  </Link>
+                  <Link to="/community-subscribe" onClick={() => setUserMenuOpen(false)}>
                     My Communities
                   </Link>
-
-                  <Link
-                    to="/it-apps"
-                    onClick={() => setUserMenuOpen(false)}
-                    role="menuitem"
-                  >
-                    IT Products
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUserMenuOpen(false);
-                      logout();
-                    }}
-                    role="menuitem"
-                  >
+                  {user?.role === "sub_admin" ? (
+                    <Link to="/admin/dashboard" onClick={() => setUserMenuOpen(false)}>
+                      Admin Dashboard
+                    </Link>
+                  ) : null}
+                  <button type="button" onClick={handleLogout}>
                     Logout
                   </button>
                 </div>
@@ -129,11 +124,10 @@ export function TopNav() {
             </div>
           ) : (
             <>
-              <Link to="/login" className="nav-text-btn">
+              <Link to={loginHref} className="nav-text-btn">
                 Login
               </Link>
-
-              <Link to="/signup" className="nav-register-btn">
+              <Link to={signupHref} className="nav-register-btn">
                 Join/Signup
               </Link>
             </>
