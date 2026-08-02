@@ -558,19 +558,43 @@ function SubscriptionRow({
   const [rupees, setRupees] = useState(String(product.price_paise / 100));
   const [period, setPeriod] = useState(product.billing_period);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const digitCount = val.replace('.', '').length;
+
+    setError('');
+    if (val.startsWith('0')) {
+      setError('Do not start with 0.');
+      return;
+    }
+    if (digitCount > 7) {
+      setError('Max 7 digits.');
+      return;
+    }
+    if (digitCount <= 7 || val === '') {
+      setRupees(val);
+    }
+  };
 
   return (
     <tr>
       <td>{product.title}</td>
       <td>
-        <input
+       <input
           type="number"
           min={1}
-          step="1"
+          step="any"
           value={rupees}
-          onChange={(e) => setRupees(e.target.value)}
-          style={{ width: 100 }}
-        />
+          onChange={handleChange}
+          style={{ width: 100, border: error ? '1px thin solid red' : '1px solid #ccc'}}
+       />
+       {error && (
+        <div style={{ color: 'red', fontSize: '10px', fontFamily: 'sans-serif' }}>
+          {error}
+        </div>
+       )}
       </td>
       <td>
         <select value={period} onChange={(e) => setPeriod(e.target.value)}>
@@ -657,14 +681,6 @@ export function AdminCategoriesPage() {
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={form.show_on_home}
-              onChange={(e) => setForm({ ...form, show_on_home: e.target.checked })}
-            />{" "}
-            Show on home
           </label>
           {msg ? <p className="admin-success">{msg}</p> : null}
           <button className="admin-btn admin-btn-primary" type="submit">

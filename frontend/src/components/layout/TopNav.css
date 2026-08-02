@@ -160,6 +160,7 @@
   cursor: pointer;
 }
 
+
 .nav-user-dropdown a:hover,
 .nav-user-dropdown button:hover {
   background: var(--color-muted);
